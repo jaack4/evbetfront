@@ -1,6 +1,9 @@
 import { BetCard, Bet } from "../../components/BetCard";
 import { DashboardNavbar } from "../../components/DashboardNavbar";
 
+// Force dynamic rendering to avoid static/ISR build for this page
+export const dynamic = 'force-dynamic';
+
 async function getBets() {
   // Fetches from your local Python API
   // Ensure your python api.py is running on port 8000
