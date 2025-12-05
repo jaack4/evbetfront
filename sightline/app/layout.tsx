@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Linewatch - EV Sports Betting",
+  title: "Sightline - EV Sports Betting",
   description: "Find the best EV sports bets in real-time.",
 };
 

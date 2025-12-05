@@ -22,3 +22,18 @@ body {
 .preserve-3d {
   transform-style: preserve-3d;
 }
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(110vh);
+  }
+}
+
+.snowflake {
+  animation-name: snowfall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}

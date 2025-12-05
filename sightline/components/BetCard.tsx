@@ -23,10 +23,7 @@ export const BetCard = ({ bet }: { bet: Bet }) => {
   const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   return (
-    <div className="relative group h-full">
-      {/* Hover Glow Effect */}
-      <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl blur opacity-0 group-hover:opacity-30 transition duration-500" />
-      
+    <div className="relative h-full">
       <div className="relative bg-zinc-900 border border-white/10 rounded-xl p-4 md:p-5 h-full flex flex-col md:flex-row md:items-center gap-4 md:gap-6 shadow-xl">
         
         {/* Section 1: Player & Matchup (Left) */}

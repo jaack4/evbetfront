@@ -5,6 +5,9 @@ async function getBets() {
   // Ensure your python api.py is running on port 8000
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (!apiUrl) {
+      throw new Error("Missing NEXT_PUBLIC_API_URL. Set it in .env.local");
+    }
     const res = await fetch(`${apiUrl}/bets?limit=50`, {
       cache: 'no-store' // Fetch fresh data on every request
     });
