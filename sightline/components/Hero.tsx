@@ -6,7 +6,7 @@ import { FeatureSpotlight } from './FeatureSpotlight';
 
 async function getTopBet(): Promise<Bet | null> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const apiUrl = process.env.API_URL;
     if (!apiUrl) return null;
     
     const res = await fetch(`${apiUrl}/bets?limit=1`, {
