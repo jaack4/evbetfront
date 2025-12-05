@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, ArrowRight, Activity, BarChart3, Percent } from 'lucide-react';
+import { TrendingUp, ArrowRight, Activity, Target, Percent, DollarSign, Clock } from 'lucide-react';
 import { clsx } from 'clsx';
 
 export interface Bet {
@@ -21,74 +21,108 @@ export interface Bet {
 export const BetCard = ({ bet }: { bet: Bet }) => {
   const date = new Date(bet.commence_time);
   const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  
+  const formatMarket = (market: string) => {
+    return market.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  };
 
   return (
-    <div className="relative h-full">
-      <div className="relative bg-zinc-900 border border-white/10 rounded-xl p-4 md:p-5 h-full flex flex-col md:flex-row md:items-center gap-4 md:gap-6 shadow-xl">
-        
-        {/* Section 1: Player & Matchup (Left) */}
-        <div className="flex items-center gap-4 md:w-[30%]">
-          <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center text-white font-bold border border-white/5 shrink-0 text-lg">
-            {bet.player.charAt(0)}
-          </div>
-          <div className="overflow-hidden min-w-0">
-            <h3 className="text-white font-semibold text-lg truncate">{bet.player}</h3>
-            <p className="text-zinc-400 text-sm font-medium truncate">
-              {bet.away_team} @ {bet.home_team}
-            </p>
-            <div className="flex items-center gap-1.5 text-zinc-500 text-[10px] mt-1">
-                <Activity className="w-3 h-3" />
-                <span>{bet.sport_title} • {formattedTime}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Section 2: Market, Line, & Stats (Middle) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:flex-1">
-          <div className="bg-black/40 rounded-lg p-2.5 border border-white/5">
-            <p className="text-zinc-500 text-[10px] mb-0.5 uppercase tracking-wider font-semibold">Market</p>
-            <p className="text-zinc-200 font-medium text-sm truncate">{bet.market}</p>
-          </div>
-          <div className="bg-black/40 rounded-lg p-2.5 border border-white/5">
-             <p className="text-zinc-500 text-[10px] mb-0.5 uppercase tracking-wider font-semibold">Line</p>
-            <div className="flex items-baseline gap-1.5">
-               <span className={clsx(
-                 "text-sm font-bold",
-                 bet.outcome === 'Over' ? "text-emerald-400" : "text-red-400"
-               )}>{bet.outcome}</span>
-               <span className="text-white font-bold text-md">{bet.betting_line}</span>
-            </div>
-          </div>
-          <div className="bg-black/40 rounded-lg p-2.5 border border-white/5">
-            <p className="text-zinc-500 text-[10px] mb-0.5 uppercase tracking-wider font-semibold flex items-center gap-1">
-              <BarChart3 className="w-3 h-3" /> Sharp Mean
-            </p>
-            <p className="text-zinc-200 font-medium text-sm">{bet.sharp_mean}</p>
-          </div>
-          <div className="bg-black/40 rounded-lg p-2.5 border border-white/5">
-            <p className="text-zinc-500 text-[10px] mb-0.5 uppercase tracking-wider font-semibold flex items-center gap-1">
-              <Percent className="w-3 h-3" /> True Prob
-            </p>
-            <p className="text-zinc-200 font-medium text-sm">{(bet.true_prob * 100).toFixed(1)}%</p>
-          </div>
-        </div>
-
-        {/* Section 3: EV & Action (Right) */}
-        <div className="flex flex-row md:flex-col items-center md:items-end justify-between gap-3 md:w-auto shrink-0 min-w-[120px]">
-          <div className="flex flex-col items-end">
-             <span className="px-2 py-0.5 rounded bg-zinc-800 border border-white/10 text-[10px] uppercase tracking-wider text-zinc-400 font-bold mb-1">
-              {bet.bookmaker}
-            </span>
-            <div className="flex items-center text-emerald-400 gap-1 text-sm font-bold">
-              <TrendingUp className="w-3 h-3" />
-              +{bet.ev_percent}% EV
-            </div>
-          </div>
+    <div className="w-full h-full bg-zinc-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-6 flex flex-col md:flex-row gap-6 items-stretch group hover:border-white/10 transition-all">
+      
+      {/* Main Content Area (Left) */}
+      <div className="flex-1 flex flex-col gap-4 min-w-0">
           
-          <button className="bg-white text-black hover:bg-zinc-200 transition-colors px-4 py-1.5 rounded text-xs font-bold flex items-center gap-1 w-full md:w-auto justify-center">
-              Bet <ArrowRight className="w-3 h-3" />
-          </button>
+          {/* Top Row: Player | Game | Market | Time */}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm border-b border-white/5 pb-4">
+             {/* Player */}
+             <div className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded bg-white/10 flex items-center justify-center text-white font-bold text-xs shrink-0">
+                    {bet.player.charAt(0)}
+                </div>
+                <span className="font-bold text-white text-base">{bet.player}</span>
+             </div>
+             
+             <div className="hidden md:block w-px h-4 bg-white/10" />
+
+             {/* Game */}
+             <div className="text-zinc-400 font-medium truncate">
+                {bet.away_team} @ {bet.home_team}
+             </div>
+
+             <div className="hidden md:block w-px h-4 bg-white/10" />
+
+             {/* Market */}
+             <div className="text-zinc-300 font-medium truncate">
+                {formatMarket(bet.market)}
+             </div>
+
+             <div className="hidden md:block w-px h-4 bg-white/10" />
+
+             {/* Time */}
+             <div className="flex items-center gap-1.5 text-zinc-500 font-mono text-xs ml-auto md:ml-0">
+                <Clock className="w-3 h-3" />
+                <span>{formattedTime}</span>
+             </div>
+          </div>
+
+          {/* Bottom Row: Data Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/5 border border-white/5 rounded-lg overflow-hidden">
+            {/* Market (Redundant but requested to keep "market, line, etc") -> Maybe we use this for Sport? Or just keep Market as simplified? Let's keep Market for now or swap for Sport if Market is up top. Actually user said "inner box with market,line...". I'll keep it but maybe simplified. */}
+            <div className="bg-zinc-900/80 p-3 flex flex-col justify-center">
+                <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-medium mb-1">Sport</span>
+                <span className="text-zinc-300 text-xs font-medium truncate">{bet.sport_title}</span>
+            </div>
+
+            {/* Line */}
+            <div className="bg-zinc-900/80 p-3 flex flex-col justify-center">
+                <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-medium mb-1">Line</span>
+                <div className="flex items-baseline gap-1.5">
+                    <span className={clsx(
+                    "text-xs font-bold",
+                    bet.outcome === 'Over' ? "text-emerald-400" : "text-red-400"
+                    )}>{bet.outcome}</span>
+                    <span className="text-white font-mono text-sm">{bet.betting_line}</span>
+                </div>
+            </div>
+
+            {/* Sharp Mean */}
+            <div className="bg-zinc-900/80 p-3 flex flex-col justify-center">
+                <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-medium mb-1 flex items-center gap-1">
+                    Sharp
+                </span>
+                <span className="text-white font-mono text-sm">{bet.sharp_mean}</span>
+            </div>
+
+            {/* True Prob */}
+            <div className="bg-zinc-900/80 p-3 flex flex-col justify-center">
+                <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-medium mb-1 flex items-center gap-1">
+                    Win %
+                </span>
+                <span className="text-emerald-400 font-mono text-sm">{(bet.true_prob * 100).toFixed(1)}%</span>
+            </div>
         </div>
+      </div>
+
+      {/* Right Column: Action & Value */}
+      <div className="flex md:flex-col items-center md:items-end justify-between gap-4 md:w-auto shrink-0 border-t md:border-t-0 md:border-l border-white/5 pt-4 md:pt-0 md:pl-6">
+         
+         <div className="flex flex-col items-start md:items-end">
+            <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-medium mb-0.5">Edge</span>
+            <div className="flex items-center gap-1 text-emerald-400">
+                <TrendingUp className="w-3 h-3" />
+                <span className="font-mono text-lg font-bold tracking-tight">+{bet.ev_percent.toFixed(1)}%</span>
+            </div>
+         </div>
+
+         <div className="flex flex-col items-end gap-2 mt-auto">
+             <div className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] text-zinc-400 font-medium uppercase">
+                {bet.bookmaker}
+             </div>
+             <button className="bg-white text-black hover:bg-zinc-200 transition-colors h-8 px-4 rounded-full text-xs font-semibold flex items-center gap-1 whitespace-nowrap">
+                Bet Now <ArrowRight className="w-3 h-3" />
+             </button>
+         </div>
+
       </div>
     </div>
   );
