@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Bet } from './BetRow';
 import { BetRow } from './BetRow';
-import { Search } from 'lucide-react';
+import { Search, RefreshCw } from 'lucide-react';
 import { clsx } from 'clsx';
 import Image from 'next/image';
 
@@ -12,6 +13,8 @@ interface DashboardContentProps {
 }
 
 export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
+  const router = useRouter();
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedBook, setSelectedBook] = useState<string | null>(null);
   const [selectedSport, setSelectedSport] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -65,6 +68,13 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
     } else {
         setSelectedSport(sport);
     }
+  };
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    router.refresh();
+    // Reset spinning after a short delay to give feedback
+    setTimeout(() => setIsRefreshing(false), 1000);
   };
 
   return (
@@ -142,6 +152,12 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
         </div>
 
         <div className="flex items-center gap-3">
+             <button
+               onClick={handleRefresh}
+               className="p-2 rounded-lg bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all"
+             >
+               <RefreshCw className={clsx("w-4 h-4", isRefreshing && "animate-spin")} />
+             </button>
              <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
                 <input 
