@@ -14,8 +14,10 @@ export interface Bet {
   home_team: string;
   away_team: string;
   commence_time: string;
-  sharp_mean: number;
+  sharp_mean?: number;
   true_prob: number;
+  std_dev?: number;
+  implied_means?: Record<string, number>;
 }
 
 export const BetCard = ({ bet }: { bet: Bet }) => {
