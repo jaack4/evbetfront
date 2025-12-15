@@ -75,15 +75,15 @@ export default async function Dashboard() {
             {/* Main Table */}
             <div className="bg-zinc-900/30 border border-white/5 rounded-xl overflow-hidden backdrop-blur-sm">
                 
-                {/* Table Header */}
-                <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-zinc-900/50 border-b border-white/5 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-                    <div className="col-span-1 text-center">Percent</div>
-                    <div className="col-span-2">Event</div>
-                    <div className="col-span-2">Market</div>
-                    <div className="col-span-2">Bet & Books</div>
-                    <div className="col-span-2">Implied Means</div>
-                    <div className="col-span-3">Model Data</div>
-                </div>
+            {/* Table Header */}
+            <div className="grid grid-cols-[0.7fr_3fr_2fr_1.75fr_1.75fr_2.8fr] gap-4 px-4 py-3 bg-zinc-900/50 border-b border-white/5 text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                <div className="text-center">Percent</div>
+                <div className="">Event</div>
+                <div className="">Market</div>
+                <div className="">Bet & Books</div>
+                <div className="">Implied Means</div>
+                <div className="">Model Data</div>
+            </div>
 
                 {/* Rows */}
                 {bets.length === 0 ? (
