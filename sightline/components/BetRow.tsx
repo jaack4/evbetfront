@@ -48,15 +48,9 @@ export const BetRow = ({ bet }: { bet: Bet }) => {
       
       {/* 1. Percent & Calculator */}
       <div className="flex flex-col items-center gap-2">
-        <button className="text-zinc-500 hover:text-white transition-colors">
-            <Calculator className="w-4 h-4" />
-        </button>
         <span className={clsx("font-bold text-base", evColor)}>
           {bet.ev_percent.toFixed(2)}%
         </span>
-        <button className="text-zinc-500 hover:text-emerald-400 transition-colors">
-            <Plus className="w-4 h-4" />
-        </button>
       </div>
 
       {/* 2. Event Info */}
@@ -81,11 +75,8 @@ export const BetRow = ({ bet }: { bet: Bet }) => {
 
       {/* 4. Bet & Book */}
       <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between bg-zinc-800/50 px-2 py-1 rounded border border-white/5">
-              <span className="text-white font-medium whitespace-nowrap">
-                {bet.outcome} {bet.betting_line}
-              </span>
-              <div className="h-8 flex items-center justify-center min-w-[80px]">
+          <div className="flex items-center justify-start gap-1 bg-zinc-800/50 px-2 py-1 rounded border border-white/5">
+              <div className="h-8 flex items-center justify-center min-w-[50px]">
                   {getBookmakerLogo(bet.bookmaker) ? (
                     <Image 
                       src={getBookmakerLogo(bet.bookmaker)!} 
@@ -100,6 +91,9 @@ export const BetRow = ({ bet }: { bet: Bet }) => {
                     </span>
                   )}
               </div>
+              <span className="text-white font-medium whitespace-nowrap">
+                {bet.outcome} {bet.betting_line}
+              </span>
           </div>
           <div className="flex items-center justify-between px-2 text-xs">
               <span className="text-zinc-400">Win Prob</span>
@@ -123,7 +117,7 @@ export const BetRow = ({ bet }: { bet: Bet }) => {
                       ) : (
                       <span className="text-[10px] text-zinc-400 uppercase truncate max-w-[50px]">{book}</span>
                     )}
-                   <span className="text-zinc-100 font-mono text-base font-semibold">{mean.toFixed(1)}</span>
+                   <span className="text-zinc-100 font-mono text-base font-semibold">{mean.toFixed(2)}</span>
                </div>
            ))
          ) : (
