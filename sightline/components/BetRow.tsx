@@ -118,3 +118,4 @@ export const BetRow = ({ bet }: { bet: Bet }) => {
   );
 };
 
+
