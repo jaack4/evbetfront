@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { TrendingUp, ArrowRight, Activity, Target, Percent, DollarSign, Clock } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -19,6 +20,15 @@ export interface Bet {
   std_dev?: number;
   implied_means?: Record<string, number>;
 }
+
+const getBookmakerLogo = (bookmaker: string) => {
+  const normalized = bookmaker.toLowerCase().replace(/\s+/g, '');
+  if (normalized.includes('draftkings')) return '/logos/draftkings.png';
+  if (normalized.includes('fanduel')) return '/logos/fanduel.png';
+  if (normalized.includes('prizepicks')) return '/logos/prizepicks.png';
+  if (normalized.includes('underdog')) return '/logos/underdog.png';
+  return null;
+};
 
 export const BetCard = ({ bet }: { bet: Bet }) => {
   const date = new Date(bet.commence_time);
@@ -117,8 +127,20 @@ export const BetCard = ({ bet }: { bet: Bet }) => {
          </div>
 
          <div className="flex flex-col items-end gap-2 mt-auto">
-             <div className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] text-zinc-400 font-medium uppercase">
-                {bet.bookmaker}
+             <div className="px-2 py-1 rounded bg-white/5 border border-white/10 h-7 flex items-center justify-center min-w-[80px]">
+                {getBookmakerLogo(bet.bookmaker) ? (
+                  <Image 
+                    src={getBookmakerLogo(bet.bookmaker)!} 
+                    alt={bet.bookmaker} 
+                    width={80} 
+                    height={24} 
+                    className="object-contain max-h-4 w-auto" 
+                  />
+                ) : (
+                  <span className="text-[10px] text-zinc-400 font-medium uppercase">
+                    {bet.bookmaker}
+                  </span>
+                )}
              </div>
              <button className="bg-white text-black hover:bg-zinc-200 transition-colors h-8 px-4 rounded-full text-xs font-semibold flex items-center gap-1 whitespace-nowrap">
                 Bet Now <ArrowRight className="w-3 h-3" />

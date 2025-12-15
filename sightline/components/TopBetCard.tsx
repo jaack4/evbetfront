@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { TrendingUp, ArrowRight, Activity } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -15,6 +16,15 @@ interface BetProps {
   sport: string;
   gameTime: string;
 }
+
+const getBookmakerLogo = (bookmaker: string) => {
+  const normalized = bookmaker.toLowerCase().replace(/\s+/g, '');
+  if (normalized.includes('draftkings')) return '/logos/draftkings.png';
+  if (normalized.includes('fanduel')) return '/logos/fanduel.png';
+  if (normalized.includes('prizepicks')) return '/logos/prizepicks.png';
+  if (normalized.includes('underdog')) return '/logos/underdog.png';
+  return null;
+};
 
 export const TopBetCard = () => {
   const topBet: BetProps = {
@@ -49,9 +59,21 @@ export const TopBetCard = () => {
             </div>
           </div>
           <div className="flex flex-col items-end">
-             <span className="px-2 py-1 rounded bg-zinc-800 border border-white/10 text-[10px] uppercase tracking-wider text-zinc-400 font-bold mb-1">
-              {topBet.bookmaker}
-            </span>
+             <div className="px-2 py-1 rounded bg-zinc-800 border border-white/10 h-7 flex items-center justify-center min-w-[80px] mb-1">
+              {getBookmakerLogo(topBet.bookmaker) ? (
+                <Image 
+                  src={getBookmakerLogo(topBet.bookmaker)!} 
+                  alt={topBet.bookmaker} 
+                  width={80} 
+                  height={24} 
+                  className="object-contain max-h-4 w-auto" 
+                />
+              ) : (
+                <span className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">
+                  {topBet.bookmaker}
+                </span>
+              )}
+            </div>
             <div className="flex items-center text-emerald-400 gap-1 text-sm font-bold">
               <TrendingUp className="w-3 h-3" />
               +{topBet.ev}% EV

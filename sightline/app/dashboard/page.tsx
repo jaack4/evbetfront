@@ -44,13 +44,7 @@ export default async function Dashboard() {
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
                 <div className="flex items-center gap-2">
                     <button className="px-4 py-2 rounded-full bg-zinc-800 border border-white/10 text-sm font-medium hover:bg-zinc-700 transition-colors">
-                        Pre-match <span className="text-zinc-400 ml-1">{bets.length}</span>
-                    </button>
-                    <button className="px-4 py-2 rounded-full bg-transparent border border-transparent text-zinc-400 text-sm font-medium hover:text-white transition-colors">
-                        Live (in-play)
-                    </button>
-                    <button className="px-4 py-2 rounded-full bg-transparent border border-transparent text-zinc-400 text-sm font-medium hover:text-white transition-colors">
-                        Hidden Bets
+                        Bets <span className="text-zinc-400 ml-1">{bets.length}</span>
                     </button>
                 </div>
 
@@ -84,11 +78,11 @@ export default async function Dashboard() {
                 {/* Table Header */}
                 <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-zinc-900/50 border-b border-white/5 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
                     <div className="col-span-1 text-center">Percent</div>
-                    <div className="col-span-3">Event</div>
+                    <div className="col-span-2">Event</div>
                     <div className="col-span-2">Market</div>
-                    <div className="col-span-3">Model Data</div>
                     <div className="col-span-2">Bet & Books</div>
-                    <div className="col-span-1 text-right">1-Click Bet</div>
+                    <div className="col-span-2">Implied Means</div>
+                    <div className="col-span-3">Model Data</div>
                 </div>
 
                 {/* Rows */}
