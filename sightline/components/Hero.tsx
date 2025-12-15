@@ -41,7 +41,7 @@ export const Hero = async () => {
                 <div className="w-8 h-8 bg-gradient-to-br from-white to-zinc-400 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.2)]">
                     <div className="w-3 h-3 bg-black rounded-full" />
                 </div>
-                <span className="font-bold text-lg tracking-tight text-white">SIGHTLINE</span>
+                <span className="font-bold text-lg tracking-tight text-white">Penis Odds</span>
             </div>
 
             {/* Desktop Nav */}

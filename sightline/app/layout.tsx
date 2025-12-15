@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Sightline - EV Sports Betting",
+  title: "Penis Odds - EV Sports Betting",
   description: "Find the best EV sports bets in real-time.",
 };
 

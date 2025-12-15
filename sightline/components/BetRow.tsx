@@ -32,7 +32,10 @@ const getBookmakerLogo = (bookmaker: string) => {
 };
 
 export const BetRow = ({ bet }: { bet: Bet }) => {
-  const date = new Date(bet.commence_time);
+  // Append 'Z' to treat as UTC if no timezone is present
+  const dateString = bet.commence_time.endsWith('Z') ? bet.commence_time : `${bet.commence_time}Z`;
+  const date = new Date(dateString);
+  
   const formattedDate = date.toLocaleDateString([], { month: 'short', day: 'numeric' });
   const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 

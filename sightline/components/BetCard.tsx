@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import { TrendingUp, ArrowRight, Activity, Target, Percent, DollarSign, Clock } from 'lucide-react';
@@ -31,7 +33,10 @@ const getBookmakerLogo = (bookmaker: string) => {
 };
 
 export const BetCard = ({ bet }: { bet: Bet }) => {
-  const date = new Date(bet.commence_time);
+  // Append 'Z' to treat as UTC if no timezone is present
+  const dateString = bet.commence_time.endsWith('Z') ? bet.commence_time : `${bet.commence_time}Z`;
+  const date = new Date(dateString);
+  
   const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   
   const formatMarket = (market: string) => {
@@ -73,7 +78,7 @@ export const BetCard = ({ bet }: { bet: Bet }) => {
              {/* Time */}
              <div className="flex items-center gap-1.5 text-zinc-500 font-mono text-xs ml-auto md:ml-0">
                 <Clock className="w-3 h-3" />
-                <span>{formattedTime}</span>
+                <span suppressHydrationWarning>{formattedTime}</span>
              </div>
           </div>
 

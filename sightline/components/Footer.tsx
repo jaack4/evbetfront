@@ -13,7 +13,7 @@ export const Footer = () => {
                 <div className="w-6 h-6 bg-white rounded-md flex items-center justify-center">
                     <div className="w-2 h-2 bg-black rounded-full" />
                 </div>
-                <span className="font-bold text-lg tracking-tight text-white">SIGHTLINE</span>
+                <span className="font-bold text-lg tracking-tight text-white">Penis Odds</span>
             </div>
             <p className="text-zinc-500 max-w-sm mb-8">
               Institutional-grade sports betting analytics for the modern investor. Stop gambling, start trading.
@@ -57,7 +57,7 @@ export const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-xs text-zinc-600">
-                &copy; {new Date().getFullYear()} Sightline Analytics Inc. All rights reserved.
+                &copy; {new Date().getFullYear()} Penis Odds Analytics Inc. All rights reserved.
             </div>
             <div className="flex gap-6 text-xs text-zinc-600">
                 <a href="#" className="hover:text-zinc-400 transition-colors">Privacy Policy</a>
