@@ -1,9 +1,19 @@
 import { Pool } from 'pg'
 
+if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL environment variable is not set')
+}
+
 // Initialize the PostgreSQL client with Railway connection string
+// Railway requires SSL, so we always enable it
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  ssl: {
+    rejectUnauthorized: false
+  },
+  max: 20, // Maximum pool size
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
 })
 
 export async function query(text: string, params?: any[]) {
@@ -12,6 +22,8 @@ export async function query(text: string, params?: any[]) {
     return { rows: result.rows }
   } catch (error) {
     console.error('Database query error:', error)
+    console.error('Query:', text)
+    console.error('Params:', params)
     throw error
   }
 }

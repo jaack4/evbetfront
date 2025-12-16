@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
         const session = event.data.object as Stripe.Checkout.Session
         
         if (session.mode !== 'subscription' || !session.subscription) {
+          console.log('Session is not a subscription, skipping')
           break
         }
 
@@ -53,18 +54,24 @@ export async function POST(req: NextRequest) {
           items: { data: Array<{ price: { id: string } }> }
         }
 
-        await upsertSubscription({
-          clerk_user_id: clerkUserId,
-          stripe_customer_id: session.customer as string,
-          stripe_subscription_id: subData.id,
-          stripe_price_id: subData.items.data[0].price.id,
-          status: subData.status,
-          current_period_start: new Date(subData.current_period_start * 1000).toISOString(),
-          current_period_end: new Date(subData.current_period_end * 1000).toISOString(),
-          cancel_at_period_end: subData.cancel_at_period_end,
-        })
+        console.log('Attempting to upsert subscription for user:', clerkUserId)
 
-        console.log(`Subscription created for user ${clerkUserId}`)
+        try {
+          await upsertSubscription({
+            clerk_user_id: clerkUserId,
+            stripe_customer_id: session.customer as string,
+            stripe_subscription_id: subData.id,
+            stripe_price_id: subData.items.data[0].price.id,
+            status: subData.status,
+            current_period_start: new Date(subData.current_period_start * 1000).toISOString(),
+            current_period_end: new Date(subData.current_period_end * 1000).toISOString(),
+            cancel_at_period_end: subData.cancel_at_period_end,
+          })
+          console.log(`Subscription created for user ${clerkUserId}`)
+        } catch (dbError) {
+          console.error('Database error upserting subscription:', dbError)
+          throw dbError
+        }
         break
       }
 
