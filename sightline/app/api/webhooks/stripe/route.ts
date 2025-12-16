@@ -47,8 +47,8 @@ export async function POST(req: NextRequest) {
         console.log('Attempting to upsert subscription for user:', clerkUserId)
 
         try {
-          // Cast to proper Stripe.Subscription type
-          const sub = subscriptionData as Stripe.Subscription
+          // Type assertion to access subscription properties
+          const sub = subscriptionData as any
           
           // Safely convert timestamps
           const currentPeriodStart = sub.current_period_start 
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
       }
 
       case 'customer.subscription.updated': {
-        const sub = event.data.object as Stripe.Subscription
+        const sub = event.data.object as any
 
         const currentPeriodStart = sub.current_period_start 
           ? new Date(sub.current_period_start * 1000).toISOString()
