@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
           break
         }
 
-        const subscription = await stripe.subscriptions.retrieve(
+        const subscriptionData = await stripe.subscriptions.retrieve(
           session.subscription as string
         )
 
@@ -45,27 +45,29 @@ export async function POST(req: NextRequest) {
         }
 
         console.log('Attempting to upsert subscription for user:', clerkUserId)
-        console.log('Subscription data:', JSON.stringify(subscription, null, 2))
 
         try {
+          // Cast to proper Stripe.Subscription type
+          const sub = subscriptionData as Stripe.Subscription
+          
           // Safely convert timestamps
-          const currentPeriodStart = subscription.current_period_start 
-            ? new Date(subscription.current_period_start * 1000).toISOString()
+          const currentPeriodStart = sub.current_period_start 
+            ? new Date(sub.current_period_start * 1000).toISOString()
             : new Date().toISOString()
           
-          const currentPeriodEnd = subscription.current_period_end
-            ? new Date(subscription.current_period_end * 1000).toISOString()
+          const currentPeriodEnd = sub.current_period_end
+            ? new Date(sub.current_period_end * 1000).toISOString()
             : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days from now as fallback
 
           await upsertSubscription({
             clerk_user_id: clerkUserId,
             stripe_customer_id: session.customer as string,
-            stripe_subscription_id: subscription.id,
-            stripe_price_id: subscription.items.data[0].price.id,
-            status: subscription.status,
+            stripe_subscription_id: sub.id,
+            stripe_price_id: sub.items.data[0].price.id,
+            status: sub.status,
             current_period_start: currentPeriodStart,
             current_period_end: currentPeriodEnd,
-            cancel_at_period_end: subscription.cancel_at_period_end || false,
+            cancel_at_period_end: sub.cancel_at_period_end || false,
           })
           console.log(`Subscription created for user ${clerkUserId}`)
         } catch (dbError) {
@@ -76,25 +78,25 @@ export async function POST(req: NextRequest) {
       }
 
       case 'customer.subscription.updated': {
-        const subscription = event.data.object as Stripe.Subscription
+        const sub = event.data.object as Stripe.Subscription
 
-        const currentPeriodStart = subscription.current_period_start 
-          ? new Date(subscription.current_period_start * 1000).toISOString()
+        const currentPeriodStart = sub.current_period_start 
+          ? new Date(sub.current_period_start * 1000).toISOString()
           : undefined
         
-        const currentPeriodEnd = subscription.current_period_end
-          ? new Date(subscription.current_period_end * 1000).toISOString()
+        const currentPeriodEnd = sub.current_period_end
+          ? new Date(sub.current_period_end * 1000).toISOString()
           : undefined
 
-        await updateSubscriptionByStripeId(subscription.id, {
-          status: subscription.status,
-          stripe_price_id: subscription.items.data[0].price.id,
+        await updateSubscriptionByStripeId(sub.id, {
+          status: sub.status,
+          stripe_price_id: sub.items.data[0].price.id,
           current_period_start: currentPeriodStart,
           current_period_end: currentPeriodEnd,
-          cancel_at_period_end: subscription.cancel_at_period_end,
+          cancel_at_period_end: sub.cancel_at_period_end,
         })
 
-        console.log(`Subscription ${subscription.id} updated to ${subscription.status}`)
+        console.log(`Subscription ${sub.id} updated to ${sub.status}`)
         break
       }
 
