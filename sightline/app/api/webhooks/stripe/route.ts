@@ -44,28 +44,28 @@ export async function POST(req: NextRequest) {
           break
         }
 
-        // Access subscription data - cast to any to handle Stripe type variations
-        const subData = subscription as unknown as {
-          id: string
-          status: string
-          current_period_start: number
-          current_period_end: number
-          cancel_at_period_end: boolean
-          items: { data: Array<{ price: { id: string } }> }
-        }
-
         console.log('Attempting to upsert subscription for user:', clerkUserId)
+        console.log('Subscription data:', JSON.stringify(subscription, null, 2))
 
         try {
+          // Safely convert timestamps
+          const currentPeriodStart = subscription.current_period_start 
+            ? new Date(subscription.current_period_start * 1000).toISOString()
+            : new Date().toISOString()
+          
+          const currentPeriodEnd = subscription.current_period_end
+            ? new Date(subscription.current_period_end * 1000).toISOString()
+            : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days from now as fallback
+
           await upsertSubscription({
             clerk_user_id: clerkUserId,
             stripe_customer_id: session.customer as string,
-            stripe_subscription_id: subData.id,
-            stripe_price_id: subData.items.data[0].price.id,
-            status: subData.status,
-            current_period_start: new Date(subData.current_period_start * 1000).toISOString(),
-            current_period_end: new Date(subData.current_period_end * 1000).toISOString(),
-            cancel_at_period_end: subData.cancel_at_period_end,
+            stripe_subscription_id: subscription.id,
+            stripe_price_id: subscription.items.data[0].price.id,
+            status: subscription.status,
+            current_period_start: currentPeriodStart,
+            current_period_end: currentPeriodEnd,
+            cancel_at_period_end: subscription.cancel_at_period_end || false,
           })
           console.log(`Subscription created for user ${clerkUserId}`)
         } catch (dbError) {
@@ -76,20 +76,21 @@ export async function POST(req: NextRequest) {
       }
 
       case 'customer.subscription.updated': {
-        const subscription = event.data.object as unknown as {
-          id: string
-          status: string
-          current_period_start: number
-          current_period_end: number
-          cancel_at_period_end: boolean
-          items: { data: Array<{ price: { id: string } }> }
-        }
+        const subscription = event.data.object as Stripe.Subscription
+
+        const currentPeriodStart = subscription.current_period_start 
+          ? new Date(subscription.current_period_start * 1000).toISOString()
+          : undefined
+        
+        const currentPeriodEnd = subscription.current_period_end
+          ? new Date(subscription.current_period_end * 1000).toISOString()
+          : undefined
 
         await updateSubscriptionByStripeId(subscription.id, {
           status: subscription.status,
           stripe_price_id: subscription.items.data[0].price.id,
-          current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-          current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+          current_period_start: currentPeriodStart,
+          current_period_end: currentPeriodEnd,
           cancel_at_period_end: subscription.cancel_at_period_end,
         })
 
@@ -127,8 +128,17 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ received: true })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error handling webhook:', error)
-    return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 })
+    console.error('Error stack:', error.stack)
+    console.error('Error message:', error.message)
+    console.error('Event type:', event.type)
+    
+    // Return detailed error for debugging
+    return NextResponse.json({ 
+      error: 'Webhook handler failed',
+      details: error.message,
+      type: event.type
+    }, { status: 500 })
   }
 }
