@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@clerk/nextjs'
 import { Check, ArrowLeft, Loader2 } from 'lucide-react'
@@ -10,7 +10,7 @@ import Link from 'next/link'
 const PRICE_ID_MONTHLY = 'price_1SesX0A6erfgyCsCQ2zjjpXf'
 const PRICE_ID_YEARLY = 'price_1SesYQA6erfgyCsCZQc3Hfpt'
 
-export default function PricingPage() {
+function PricingContent() {
   const [loading, setLoading] = useState<string | null>(null)
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -212,5 +212,17 @@ export default function PricingPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    }>
+      <PricingContent />
+    </Suspense>
   )
 }
