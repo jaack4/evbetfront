@@ -10,12 +10,23 @@ async function getBets() {
   // Ensure your python api.py is running on port 8000
   try {
     const apiUrl = process.env.API_URL || 'http://127.0.0.1:8000';
+    const apiKey = process.env.API_KEY;
     
     // For development/demo purposes if API is not reachable, returns empty array
     // but typically you'd want to handle this better.
     try {
+        const headers: HeadersInit = {
+          'Content-Type': 'application/json',
+        };
+        
+        // Add X-API-KEY header if API key is available
+        if (apiKey) {
+          headers['X-API-KEY'] = apiKey;
+        }
+        
         const res = await fetch(`${apiUrl}/bets?limit=50`, {
-          cache: 'no-store'
+          cache: 'no-store',
+          headers
         });
         
         if (!res.ok) return [];

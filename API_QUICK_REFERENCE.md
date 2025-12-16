@@ -2,6 +2,15 @@
 
 Base URL: `http://localhost:8000`
 
+## Authentication
+
+All API requests require authentication using an API key sent in the `X-API-KEY` header.
+
+**Example:**
+```bash
+curl -H "X-API-KEY: your_api_key_here" http://localhost:8000/bets
+```
+
 ## Endpoints
 
 ### 0. Root / API Info
@@ -169,28 +178,44 @@ GET /health
 
 ### Get Top EV Bets for PrizePicks
 ```javascript
-fetch('http://localhost:8000/bets?bookmaker=prizepicks&limit=20')
+fetch('http://localhost:8000/bets?bookmaker=prizepicks&limit=20', {
+  headers: {
+    'X-API-KEY': 'your_api_key_here'
+  }
+})
   .then(res => res.json())
   .then(bets => console.log(bets));
 ```
 
 ### Get NFL Bets with 5%+ EV
 ```javascript
-fetch('http://localhost:8000/bets?sport=NFL&min_ev=5.0')
+fetch('http://localhost:8000/bets?sport=NFL&min_ev=5.0', {
+  headers: {
+    'X-API-KEY': 'your_api_key_here'
+  }
+})
   .then(res => res.json())
   .then(bets => console.log(bets));
 ```
 
 ### Get Bets for Specific Player
 ```javascript
-fetch('http://localhost:8000/bets?player=mahomes')
+fetch('http://localhost:8000/bets?player=mahomes', {
+  headers: {
+    'X-API-KEY': 'your_api_key_here'
+  }
+})
   .then(res => res.json())
   .then(bets => console.log(bets));
 ```
 
 ### Get Dashboard Stats
 ```javascript
-fetch('http://localhost:8000/bets/stats')
+fetch('http://localhost:8000/bets/stats', {
+  headers: {
+    'X-API-KEY': 'your_api_key_here'
+  }
+})
   .then(res => res.json())
   .then(stats => console.log(stats));
 ```
@@ -205,7 +230,11 @@ function BetsList() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:8000/bets?limit=50')
+    fetch('http://localhost:8000/bets?limit=50', {
+      headers: {
+        'X-API-KEY': process.env.NEXT_PUBLIC_API_KEY || 'your_api_key_here'
+      }
+    })
       .then(res => res.json())
       .then(data => {
         setBets(data);
@@ -242,7 +271,11 @@ const params = new URLSearchParams({
   limit: '100'
 });
 
-fetch(`http://localhost:8000/bets?${params}`)
+fetch(`http://localhost:8000/bets?${params}`, {
+  headers: {
+    'X-API-KEY': 'your_api_key_here'
+  }
+})
   .then(res => res.json())
   .then(bets => console.log(bets));
 ```
@@ -250,7 +283,11 @@ fetch(`http://localhost:8000/bets?${params}`)
 ## Error Handling
 
 ```javascript
-fetch('http://localhost:8000/bets')
+fetch('http://localhost:8000/bets', {
+  headers: {
+    'X-API-KEY': 'your_api_key_here'
+  }
+})
   .then(res => {
     if (!res.ok) throw new Error('API error');
     return res.json();

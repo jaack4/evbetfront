@@ -9,8 +9,20 @@ async function getTopBet(): Promise<Bet | null> {
     const apiUrl = process.env.API_URL;
     if (!apiUrl) return null;
     
+    const apiKey = process.env.API_KEY;
+    
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+    
+    // Add X-API-KEY header if API key is available
+    if (apiKey) {
+      headers['X-API-KEY'] = apiKey;
+    }
+    
     const res = await fetch(`${apiUrl}/bets?limit=1`, {
-      cache: 'no-store'
+      cache: 'no-store',
+      headers
     });
     
     if (!res.ok) return null;
