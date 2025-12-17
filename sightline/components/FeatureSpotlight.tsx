@@ -1,5 +1,5 @@
 import React from 'react';
-import { BetCard, Bet } from './BetCard';
+import { BetRow, Bet } from './BetRow';
 import { Activity, ShieldCheck, Zap, RefreshCw } from 'lucide-react';
 
 interface FeatureSpotlightProps {
@@ -8,10 +8,10 @@ interface FeatureSpotlightProps {
 
 export const FeatureSpotlight = ({ topBet }: FeatureSpotlightProps) => {
   return (
-    <div className="w-full max-w-6xl mx-auto mt-24 z-10 relative px-4">
+    <div className="w-full max-w-7xl mx-auto mt-0 z-10 relative px-4">
       
       {/* Main Dashboard Panel */}
-      <div className="rounded-3xl border border-white/10 bg-zinc-900/50 backdrop-blur-xl overflow-hidden relative shadow-2xl shadow-black/50 mb-16">
+      <div className="rounded-3xl border border-white/10 bg-black/80 backdrop-blur-xl overflow-hidden relative shadow-2xl shadow-black/50 mb-16">
         {/* Top Bar (Fake UI) */}
         <div className="h-12 border-b border-white/5 flex items-center px-6 bg-white/[0.02]">
             <div className="flex items-center gap-4">
@@ -25,11 +25,22 @@ export const FeatureSpotlight = ({ topBet }: FeatureSpotlightProps) => {
             </div>
         </div>
 
-        <div className="p-4 md:p-10 flex items-center justify-center bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] relative min-h-[250px]">
+        <div className="p-4 md:p-6 flex items-center justify-center bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] relative min-h-[150px]">
             
             <div className="w-full transform transition-all duration-500 hover:scale-[1.01] relative z-10">
                 {topBet ? (
-                    <BetCard bet={topBet} />
+                    <div className="bg-black/40 rounded-xl border border-white/10 overflow-hidden backdrop-blur-sm">
+                        {/* Header Row */}
+                        <div className="grid grid-cols-[0.7fr_3fr_2fr_1.75fr_1.75fr_2.8fr] gap-4 px-4 py-2 border-b border-white/5 bg-white/[0.02] text-xs font-medium text-zinc-250 tracking-wider">
+                            <div className="text-center">EV%</div>
+                            <div>Event</div>
+                            <div>Market</div>
+                            <div>Bet</div>
+                            <div>Implied Means</div>
+                            <div>Model Data</div>
+                        </div>
+                        <BetRow bet={topBet} />
+                    </div>
                 ) : (
                     <div className="h-64 w-full rounded-xl border border-white/10 bg-black/50 flex flex-col items-center justify-center text-zinc-500 gap-4">
                         <RefreshCw className="w-8 h-8 animate-spin opacity-50" />
