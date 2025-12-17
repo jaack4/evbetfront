@@ -37,3 +37,16 @@ body {
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
+
+@keyframes border-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-border-spin {
+  animation: border-spin 4s linear infinite;
+}

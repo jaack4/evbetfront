@@ -1,8 +1,10 @@
 import React from 'react';
 import { BetCard, Bet } from './BetCard';
-import { Download, ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronRight } from 'lucide-react';
 import { Snowfall } from './Snowfall';
 import { FeatureSpotlight } from './FeatureSpotlight';
+import { AccountDropdown } from './AccountDropdown';
+import { auth, currentUser } from '@clerk/nextjs/server';
 
 async function getTopBet(): Promise<Bet | null> {
   try {
@@ -40,6 +42,8 @@ async function getTopBet(): Promise<Bet | null> {
 
 export const Hero = async () => {
   const topBet = await getTopBet();
+  const { userId } = await auth();
+  const user = userId ? await currentUser() : null;
 
   return (
     <div className="relative min-h-screen bg-black text-white font-sans selection:bg-white/20 overflow-hidden">
@@ -66,11 +70,23 @@ export const Hero = async () => {
 
             {/* Actions */}
             <div className="flex items-center gap-4">
-                <a href="#" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors hidden md:block">Log in</a>
-                <a href="/dashboard" className="group relative px-4 py-2 bg-white text-black rounded-full text-sm font-semibold hover:bg-zinc-200 transition-all flex items-center gap-2">
-                    Launch App
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                </a>
+                {user ? (
+                  <>
+                    <AccountDropdown userName={user.firstName || user.emailAddresses[0].emailAddress} />
+                    <a href="/dashboard" className="group relative px-4 py-2 bg-white text-black rounded-full text-sm font-semibold hover:bg-zinc-200 transition-all flex items-center gap-2">
+                        Dashboard
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </a>
+                  </>
+                ) : (
+                  <>
+                    <a href="/sign-in" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors hidden md:block">Log in</a>
+                    <a href="/sign-up" className="group relative px-4 py-2 bg-white text-black rounded-full text-sm font-semibold hover:bg-zinc-200 transition-all flex items-center gap-2">
+                        Sign Up
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </a>
+                  </>
+                )}
             </div>
         </div>
       </nav>
@@ -100,13 +116,12 @@ export const Hero = async () => {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-4 mb-24 w-full sm:w-auto">
-           <button className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200 transition-all h-12 px-8 rounded-full text-base font-semibold flex items-center justify-center gap-2 shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_-5px_rgba(255,255,255,0.4)] hover:-translate-y-0.5">
-             Start Free Trial
-           </button>
-           <button className="w-full sm:w-auto bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white transition-all h-12 px-8 rounded-full text-base font-medium flex items-center justify-center gap-2 hover:-translate-y-0.5">
-             <Download className="w-4 h-4" />
-             Download App
-           </button>
+           <div className="relative group w-full sm:w-auto rounded-full p-[1px] overflow-hidden shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_-5px_rgba(255,255,255,0.4)] transition-all hover:-translate-y-0.5">
+             <div className="absolute inset-[-100%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#1d4ed8_0%,#93c5fd_50%,#1d4ed8_100%)]" />
+             <a href={user ? "/dashboard" : "/sign-up"} className="relative w-full sm:w-auto bg-white text-black hover:bg-zinc-100 transition-all h-12 px-8 rounded-full text-base font-semibold flex items-center justify-center gap-2">
+               {user ? "Go to Dashboard" : "Start Free Trial"}
+             </a>
+           </div>
         </div>
 
         <FeatureSpotlight topBet={topBet} />
@@ -114,7 +129,7 @@ export const Hero = async () => {
       
       {/* Background Gradients */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1000px] bg-gradient-to-b from-zinc-900/0 via-zinc-900/0 to-black pointer-events-none" />
-      <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-white/5 blur-[120px] rounded-full pointer-events-none mix-blend-screen" />
+      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[800px] bg-[radial-gradient(circle,rgba(255,255,255,0.08)_0%,rgba(0,0,0,0)_70%)] pointer-events-none" />
 
     </div>
   );

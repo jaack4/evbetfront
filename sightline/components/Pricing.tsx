@@ -1,7 +1,9 @@
 import React from 'react';
 import { Check } from 'lucide-react';
+import { auth } from '@clerk/nextjs/server';
 
-export const Pricing = () => {
+export const Pricing = async () => {
+  const { userId } = await auth();
   return (
     <section className="py-32 bg-black relative overflow-hidden" id="pricing">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -71,9 +73,9 @@ export const Pricing = () => {
                         ))}
                     </ul>
 
-                    <button className="w-full bg-white text-black hover:bg-zinc-200 transition-all h-12 rounded-xl font-semibold text-sm flex items-center justify-center shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_-5px_rgba(255,255,255,0.4)] hover:-translate-y-0.5">
+                    <a href={userId ? "/pricing" : "/sign-up"} className="w-full bg-white text-black hover:bg-zinc-200 transition-all h-12 rounded-xl font-semibold text-sm flex items-center justify-center shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_-5px_rgba(255,255,255,0.4)] hover:-translate-y-0.5">
                         Start Free Trial
-                    </button>
+                    </a>
                     <p className="text-center text-xs text-zinc-500 mt-4">
                         Secure payment via Stripe. Encrypted.
                     </p>
