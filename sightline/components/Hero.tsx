@@ -118,8 +118,9 @@ export const Hero = async () => {
         <div className="flex flex-col sm:flex-row items-center gap-4 mb-14 w-full sm:w-auto">
            <div className="relative group w-full sm:w-auto rounded-full p-[1px] overflow-hidden shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_-5px_rgba(255,255,255,0.4)] transition-all hover:-translate-y-0.5">
              <div className="absolute inset-[-100%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#1d4ed8_0%,#93c5fd_50%,#1d4ed8_100%)]" />
-             <a href={user ? "/dashboard" : "/sign-up"} className="relative w-full sm:w-auto bg-white text-black hover:bg-zinc-100 transition-all h-12 px-8 rounded-full text-base font-semibold flex items-center justify-center gap-2">
-               {user ? "Go to Dashboard" : "Start Free Trial"}
+             <a href={user ? "/dashboard" : "/sign-up"} className="relative w-full sm:w-auto bg-white text-black hover:bg-zinc-100 transition-all h-12 px-8 rounded-full text-base font-semibold flex items-center justify-center gap-2 group">
+               {user ? "Go to Dashboard" : "Get Started"}
+               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
              </a>
            </div>
         </div>
