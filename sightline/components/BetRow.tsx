@@ -25,6 +25,7 @@ export interface Bet {
 const getBookmakerLogo = (bookmaker: string) => {
     const normalized = bookmaker.toLowerCase().replace(/\s+/g, '');
     if (normalized.includes('draftkings')) return '/logos/draftkings.png';
+    if (normalized.includes('pick6')) return '/logos/pick6.png';
     if (normalized.includes('fanduel')) return '/logos/fanduel.png';
     if (normalized.includes('prizepicks')) return '/logos/prizepicks.png';
     if (normalized.includes('underdog')) return '/logos/underdog.png';

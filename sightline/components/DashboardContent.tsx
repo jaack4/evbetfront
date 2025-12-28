@@ -129,18 +129,18 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
                             Betr
                         </button>
                         <button
-                            onClick={() => toggleBook('draftkings')}
+                            onClick={() => toggleBook('pick6')}
                             className={clsx(
                                 "px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 border",
-                                selectedBook === 'draftkings'
-                                    ? "bg-zinc-800 border-orange-500/50 text-white shadow-[0_0_10px_-4px_rgba(34,197,94,0.5)]"
+                                selectedBook === 'pick6'
+                                    ? "bg-zinc-800 border-green-500/50 text-white shadow-[0_0_10px_-4px_rgba(34,197,94,0.5)]"
                                     : "bg-zinc-900/50 border-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 hover:border-white/10"
                             )}
                         >
                             <div className="w-4 h-4 relative">
-                                <Image src="/logos/draftkings.png" alt="DraftKings" fill className="object-contain" />
+                                <Image src="/logos/pick6.png" alt="Pick6" fill className="object-contain" />
                             </div>
-                            DraftKings
+                            Pick6
                         </button>
                     </div>
 
@@ -197,7 +197,7 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
                         />
                     </div>
                 </div>
-            </div>
+            </div >
 
             <div className="mb-2 px-1 flex items-center justify-between">
                 <span className="text-zinc-400 font-medium text-xs">
@@ -236,7 +236,7 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 };
 
