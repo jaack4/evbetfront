@@ -22,7 +22,7 @@ async function getBets() {
                 headers['X-API-KEY'] = apiKey
             }
 
-            const res = await fetch(`${apiUrl}/bets?`, {
+            const res = await fetch(`${apiUrl}/bets?limit=400`, {
                 cache: 'no-store',
                 headers
             })
