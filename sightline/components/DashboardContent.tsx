@@ -81,104 +81,108 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
         <div className="max-w-7xl mx-auto">
 
             {/* Control Bar */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
-                <div className="flex items-center gap-3">
-                    <span className="text-zinc-400 text-sm font-medium mr-2">Book:</span>
-                    {/* Bookmaker Filters */}
-                    <div className="flex items-center gap-2">
-                        <button
-                            onClick={() => toggleBook('underdog')}
-                            className={clsx(
-                                "px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 border",
-                                selectedBook === 'underdog'
-                                    ? "bg-zinc-800 border-yellow-500/50 text-white shadow-[0_0_10px_-4px_rgba(234,179,8,0.5)]"
-                                    : "bg-zinc-900/50 border-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 hover:border-white/10"
-                            )}
-                        >
-                            <div className="w-4 h-4 relative">
-                                <Image src="/logos/underdog.png" alt="Underdog" fill className="object-contain" />
-                            </div>
-                            Underdog
-                        </button>
-                        <button
-                            onClick={() => toggleBook('prizepicks')}
-                            className={clsx(
-                                "px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 border",
-                                selectedBook === 'prizepicks'
-                                    ? "bg-zinc-800 border-purple-500/50 text-white shadow-[0_0_10px_-4px_rgba(168,85,247,0.5)]"
-                                    : "bg-zinc-900/50 border-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 hover:border-white/10"
-                            )}
-                        >
-                            <div className="w-4 h-4 relative">
-                                <Image src="/logos/prizepicks.png" alt="PrizePicks" fill className="object-contain" />
-                            </div>
-                            PrizePicks
-                        </button>
-                        <button
-                            onClick={() => toggleBook('betr')}
-                            className={clsx(
-                                "px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 border",
-                                selectedBook === 'betr'
-                                    ? "bg-zinc-800 border-red-500/50 text-white shadow-[0_0_10px_-4px_rgba(239,68,68,0.5)]"
-                                    : "bg-zinc-900/50 border-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 hover:border-white/10"
-                            )}
-                        >
-                            <div className="w-4 h-4 relative">
-                                <Image src="/logos/betr.png" alt="Betr" fill className="object-contain" />
-                            </div>
-                            Betr
-                        </button>
-                        <button
-                            onClick={() => toggleBook('pick6')}
-                            className={clsx(
-                                "px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 border",
-                                selectedBook === 'pick6'
-                                    ? "bg-zinc-800 border-green-500/50 text-white shadow-[0_0_10px_-4px_rgba(34,197,94,0.5)]"
-                                    : "bg-zinc-900/50 border-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 hover:border-white/10"
-                            )}
-                        >
-                            <div className="w-4 h-4 relative">
-                                <Image src="/logos/pick6.png" alt="Pick6" fill className="object-contain" />
-                            </div>
-                            Pick6
-                        </button>
-                    </div>
+            <div className="flex flex-col gap-4 mb-4">
+                {/* Filters */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 flex-1 w-full">
+                        <span className="text-zinc-400 text-sm font-medium">Book:</span>
+                        {/* Bookmaker Filters */}
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <button
+                                onClick={() => toggleBook('underdog')}
+                                className={clsx(
+                                    "px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all flex items-center gap-2 border",
+                                    selectedBook === 'underdog'
+                                        ? "bg-zinc-800 border-yellow-500/50 text-white shadow-[0_0_10px_-4px_rgba(234,179,8,0.5)]"
+                                        : "bg-zinc-900/50 border-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 hover:border-white/10"
+                                )}
+                            >
+                                <div className="w-4 h-4 relative">
+                                    <Image src="/logos/underdog.png" alt="Underdog" fill className="object-contain" />
+                                </div>
+                                Underdog
+                            </button>
+                            <button
+                                onClick={() => toggleBook('prizepicks')}
+                                className={clsx(
+                                    "px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all flex items-center gap-2 border",
+                                    selectedBook === 'prizepicks'
+                                        ? "bg-zinc-800 border-purple-500/50 text-white shadow-[0_0_10px_-4px_rgba(168,85,247,0.5)]"
+                                        : "bg-zinc-900/50 border-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 hover:border-white/10"
+                                )}
+                            >
+                                <div className="w-4 h-4 relative">
+                                    <Image src="/logos/prizepicks.png" alt="PrizePicks" fill className="object-contain" />
+                                </div>
+                                PrizePicks
+                            </button>
+                            <button
+                                onClick={() => toggleBook('betr')}
+                                className={clsx(
+                                    "px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all flex items-center gap-2 border",
+                                    selectedBook === 'betr'
+                                        ? "bg-zinc-800 border-red-500/50 text-white shadow-[0_0_10px_-4px_rgba(239,68,68,0.5)]"
+                                        : "bg-zinc-900/50 border-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 hover:border-white/10"
+                                )}
+                            >
+                                <div className="w-4 h-4 relative">
+                                    <Image src="/logos/betr.png" alt="Betr" fill className="object-contain" />
+                                </div>
+                                Betr
+                            </button>
+                            <button
+                                onClick={() => toggleBook('pick6')}
+                                className={clsx(
+                                    "px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all flex items-center gap-2 border",
+                                    selectedBook === 'pick6'
+                                        ? "bg-zinc-800 border-green-500/50 text-white shadow-[0_0_10px_-4px_rgba(34,197,94,0.5)]"
+                                        : "bg-zinc-900/50 border-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 hover:border-white/10"
+                                )}
+                            >
+                                <div className="w-4 h-4 relative">
+                                    <Image src="/logos/pick6.png" alt="Pick6" fill className="object-contain" />
+                                </div>
+                                Pick6
+                            </button>
+                        </div>
 
-                    <div className="w-px h-6 bg-white/10 mx-2" />
+                        <div className="hidden sm:block w-px h-6 bg-white/10 mx-2" />
 
-                    <span className="text-zinc-400 text-sm font-medium mr-2">League:</span>
-                    <div className="flex items-center gap-2">
-                        <button
-                            onClick={() => toggleSport('nba')}
-                            className={clsx(
-                                "px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 border",
-                                selectedSport === 'nba'
-                                    ? "bg-zinc-800 border-blue-500/50 text-white shadow-[0_0_10px_-4px_rgba(59,130,246,0.5)]"
-                                    : "bg-zinc-900/50 border-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 hover:border-white/10"
-                            )}
-                        >
-                            <div className="w-4 h-4 relative">
-                                <Image src="/logos/nba.png" alt="NBA" fill className="object-contain" />
-                            </div>
-                            NBA
-                        </button>
-                        <button
-                            onClick={() => toggleSport('nfl')}
-                            className={clsx(
-                                "px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 border",
-                                selectedSport === 'nfl'
-                                    ? "bg-zinc-800 border-red-500/50 text-white shadow-[0_0_10px_-4px_rgba(239,68,68,0.5)]"
-                                    : "bg-zinc-900/50 border-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 hover:border-white/10"
-                            )}
-                        >
-                            <div className="w-4 h-4 relative">
-                                <Image src="/logos/nfl.png" alt="NFL" fill className="object-contain" />
-                            </div>
-                            NFL
-                        </button>
+                        <span className="text-zinc-400 text-sm font-medium">League:</span>
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <button
+                                onClick={() => toggleSport('nba')}
+                                className={clsx(
+                                    "px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all flex items-center gap-2 border",
+                                    selectedSport === 'nba'
+                                        ? "bg-zinc-800 border-blue-500/50 text-white shadow-[0_0_10px_-4px_rgba(59,130,246,0.5)]"
+                                        : "bg-zinc-900/50 border-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 hover:border-white/10"
+                                )}
+                            >
+                                <div className="w-4 h-4 relative">
+                                    <Image src="/logos/nba.png" alt="NBA" fill className="object-contain" />
+                                </div>
+                                NBA
+                            </button>
+                            <button
+                                onClick={() => toggleSport('nfl')}
+                                className={clsx(
+                                    "px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all flex items-center gap-2 border",
+                                    selectedSport === 'nfl'
+                                        ? "bg-zinc-800 border-red-500/50 text-white shadow-[0_0_10px_-4px_rgba(239,68,68,0.5)]"
+                                        : "bg-zinc-900/50 border-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 hover:border-white/10"
+                                )}
+                            >
+                                <div className="w-4 h-4 relative">
+                                    <Image src="/logos/nfl.png" alt="NFL" fill className="object-contain" />
+                                </div>
+                                NFL
+                            </button>
+                        </div>
                     </div>
                 </div>
 
+                {/* Search and Refresh */}
                 <div className="flex items-center gap-3">
                     <button
                         onClick={handleRefresh}
@@ -186,14 +190,14 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
                     >
                         <RefreshCw className={clsx("w-4 h-4", isRefreshing && "animate-spin")} />
                     </button>
-                    <div className="relative">
+                    <div className="relative flex-1 sm:flex-initial">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
                         <input
                             type="text"
                             placeholder="Search"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="bg-zinc-900 border border-white/10 rounded pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-emerald-500/50 w-64 placeholder:text-zinc-600"
+                            className="bg-zinc-900 border border-white/10 rounded pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-emerald-500/50 w-full sm:w-64 placeholder:text-zinc-600"
                         />
                     </div>
                 </div>
@@ -208,7 +212,7 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
             <div className="bg-zinc-900/30 border border-white/5 rounded-xl overflow-hidden backdrop-blur-sm">
 
                 {/* Table Header */}
-                <div className="grid grid-cols-[0.7fr_3fr_2fr_1.75fr_1.75fr_2.8fr] gap-4 px-4 py-3 bg-zinc-900/50 border-b border-white/5 text-xs font-semibold text-zinc-200">
+                <div className="hidden md:grid grid-cols-[0.7fr_3fr_2fr_1.75fr_1.75fr_2.8fr] gap-4 px-4 py-3 bg-zinc-900/50 border-b border-white/5 text-xs font-semibold text-zinc-200">
                     <div className="text-center">EV</div>
                     <div className="">Event</div>
                     <div className="">Market</div>
