@@ -51,110 +51,104 @@ export const BetRow = ({ bet }: { bet: Bet }) => {
     return (
         <>
             {/* Mobile Layout */}
-            <div className="md:hidden p-4 border-b border-white/5 hover:bg-white/5 transition-colors">
-                {/* Header with EV and Date */}
-                <div className="flex items-center justify-between mb-3">
-                    <span className={clsx("font-bold text-xl", evColor)}>
-                        {bet.ev_percent.toFixed(2)}% EV
-                    </span>
-                    <div className="text-zinc-400 text-xs">
-                        {formattedDate} at {formattedTime}
+            <div className="md:hidden p-2.5 border-b border-white/5 hover:bg-white/5 transition-colors">
+                {/* Header: EV, Player, and Date in compact layout */}
+                <div className="flex items-start justify-between mb-1.5">
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-baseline gap-2 mb-0.5">
+                            <span className={clsx("font-bold text-lg", evColor)}>
+                                {bet.ev_percent.toFixed(2)}%
+                            </span>
+                            <span className="text-zinc-500 text-xs">EV</span>
+                        </div>
+                        <div className="font-semibold text-white text-base truncate">
+                            {bet.player}
+                        </div>
+                    </div>
+                    <div className="text-zinc-400 text-xs text-right ml-2">
+                        {formattedDate}<br />{formattedTime}
                     </div>
                 </div>
 
-                {/* Player Name */}
-                <div className="font-bold text-white text-lg mb-1">
-                    {bet.player}
-                </div>
-
-                {/* Teams and Sport */}
-                <div className="text-zinc-300 text-sm mb-3">
+                {/* Teams, Sport, and Market in one line */}
+                <div className="text-zinc-400 text-xs mb-2">
                     {bet.away_team} vs {bet.home_team}
-                    <span className="mx-2 text-zinc-500">•</span>
-                    {bet.sport_title}
+                    <span className="mx-1.5 text-zinc-600">•</span>
+                    <span className="text-indigo-400">{formatMarket(bet.market)}</span>
                 </div>
 
-                {/* Market */}
-                <div className="text-indigo-300 font-medium mb-3 text-sm">
-                    {formatMarket(bet.market)}
-                </div>
-
-                {/* Bet Info Card */}
-                <div className="bg-zinc-800/50 p-3 rounded-lg border border-white/5 mb-3">
-                    <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                            <div className="h-7 flex items-center justify-center">
-                                {getBookmakerLogo(bet.bookmaker) ? (
-                                    <Image
-                                        src={getBookmakerLogo(bet.bookmaker)!}
-                                        alt={bet.bookmaker}
-                                        width={70}
-                                        height={24}
-                                        className="object-contain max-h-5 w-auto"
-                                    />
-                                ) : (
-                                    <span className="text-xs font-bold text-zinc-300 uppercase">
-                                        {bet.bookmaker}
-                                    </span>
-                                )}
-                            </div>
+                {/* Bet Info - More compact horizontal layout */}
+                <div className="flex items-center justify-between bg-zinc-800/50 px-2.5 py-1.5 rounded border border-white/5 mb-2">
+                    <div className="flex items-center gap-2">
+                        <div className="h-5 flex items-center justify-center">
+                            {getBookmakerLogo(bet.bookmaker) ? (
+                                <Image
+                                    src={getBookmakerLogo(bet.bookmaker)!}
+                                    alt={bet.bookmaker}
+                                    width={60}
+                                    height={20}
+                                    className="object-contain max-h-4 w-auto"
+                                />
+                            ) : (
+                                <span className="text-xs font-bold text-zinc-300 uppercase">
+                                    {bet.bookmaker}
+                                </span>
+                            )}
                         </div>
-                        <span className="text-white font-bold text-lg">
+                        <span className="text-white font-bold text-sm">
                             {bet.outcome} {bet.betting_line}
                         </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
-                        <span className="text-zinc-400">Win Probability</span>
-                        <span className="text-zinc-100 font-bold font-mono">{(bet.true_prob * 100).toFixed(1)}%</span>
+                    <div className="text-xs">
+                        <span className="text-zinc-500">Win: </span>
+                        <span className="text-zinc-100 font-mono font-semibold">{(bet.true_prob * 100).toFixed(1)}%</span>
                     </div>
                 </div>
 
-                {/* Model Data */}
-                <div className="grid grid-cols-3 gap-3 mb-3">
-                    <div className="bg-zinc-800/30 p-2 rounded border border-white/5 text-center">
-                        <div className="text-indigo-300 text-xs mb-1">Sharp Mean</div>
-                        <div className="text-white font-mono font-bold">
-                            {bet.sharp_mean !== undefined ? bet.sharp_mean.toFixed(2) : '-'}
+                {/* Model Data - Compact inline layout */}
+                <div className="flex items-center justify-between text-xs mb-2">
+                    <div className="flex items-center gap-3">
+                        <div>
+                            <span className="text-indigo-400">Sharp: </span>
+                            <span className="text-white font-mono font-semibold">
+                                {bet.sharp_mean !== undefined ? bet.sharp_mean.toFixed(2) : '-'}
+                            </span>
                         </div>
-                    </div>
-                    <div className="bg-zinc-800/30 p-2 rounded border border-white/5 text-center">
-                        <div className="text-indigo-300 text-xs mb-1">Std Dev</div>
-                        <div className="text-zinc-200 font-mono text-sm">
-                            {bet.std_dev !== undefined ? bet.std_dev.toFixed(2) : '-'}
+                        <div>
+                            <span className="text-indigo-400">SD: </span>
+                            <span className="text-zinc-200 font-mono">
+                                {bet.std_dev !== undefined ? bet.std_dev.toFixed(2) : '-'}
+                            </span>
                         </div>
-                    </div>
-                    <div className="bg-zinc-800/30 p-2 rounded border border-white/5 text-center">
-                        <div className="text-indigo-300 text-xs mb-1">Games</div>
-                        <div className="text-zinc-200 font-mono text-sm">
-                            {bet.sample_size !== undefined ? bet.sample_size : '-'}
+                        <div>
+                            <span className="text-indigo-400">n: </span>
+                            <span className="text-zinc-200 font-mono">
+                                {bet.sample_size !== undefined ? bet.sample_size : '-'}
+                            </span>
                         </div>
                     </div>
                 </div>
 
-                {/* Implied Means */}
+                {/* Implied Means - Only show if present, more compact */}
                 {bet.implied_means && Object.keys(bet.implied_means).length > 0 && (
-                    <div className="bg-zinc-800/30 p-3 rounded border border-white/5">
-                        <div className="text-indigo-300 text-xs font-semibold mb-2">Implied Means</div>
-                        <div className="flex flex-col gap-2">
-                            {Object.entries(bet.implied_means).map(([book, mean]) => (
-                                <div key={book} className="flex justify-between items-center">
-                                    <div className="flex items-center gap-2">
-                                        {getBookmakerLogo(book) ? (
-                                            <Image
-                                                src={getBookmakerLogo(book)!}
-                                                alt={book}
-                                                width={60}
-                                                height={20}
-                                                className="object-contain max-h-4 w-auto opacity-80"
-                                            />
-                                        ) : (
-                                            <span className="text-xs text-zinc-400 uppercase">{book}</span>
-                                        )}
-                                    </div>
-                                    <span className="text-zinc-100 font-mono font-semibold">{mean.toFixed(2)}</span>
-                                </div>
-                            ))}
-                        </div>
+                    <div className="flex items-center gap-2 flex-wrap text-xs pt-1.5 border-t border-white/5">
+                        <span className="text-indigo-400 font-semibold">Implied:</span>
+                        {Object.entries(bet.implied_means).map(([book, mean]) => (
+                            <div key={book} className="flex items-center gap-1.5 bg-zinc-800/30 px-2 py-0.5 rounded">
+                                {getBookmakerLogo(book) ? (
+                                    <Image
+                                        src={getBookmakerLogo(book)!}
+                                        alt={book}
+                                        width={50}
+                                        height={16}
+                                        className="object-contain max-h-3 w-auto opacity-80"
+                                    />
+                                ) : (
+                                    <span className="text-zinc-500 uppercase text-[10px]">{book}</span>
+                                )}
+                                <span className="text-zinc-100 font-mono">{mean.toFixed(2)}</span>
+                            </div>
+                        ))}
                     </div>
                 )}
             </div>
