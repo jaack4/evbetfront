@@ -29,6 +29,7 @@ const getBookmakerLogo = (bookmaker: string) => {
   if (normalized.includes('fanduel')) return '/logos/fanduel.png';
   if (normalized.includes('prizepicks')) return '/logos/prizepicks.png';
   if (normalized.includes('underdog')) return '/logos/underdog.png';
+  if (normalized.includes('betr')) return '/logos/betr.png';
   return null;
 };
 

@@ -9,60 +9,60 @@ import { Bet } from "../../components/BetRow"
 export const dynamic = 'force-dynamic'
 
 async function getBets() {
-  try {
-    const apiUrl = process.env.API_URL || 'http://127.0.0.1:8000'
-    const apiKey = process.env.API_KEY
-    
     try {
-        const headers: HeadersInit = {
-          'Content-Type': 'application/json',
+        const apiUrl = process.env.API_URL || 'http://127.0.0.1:8000'
+        const apiKey = process.env.API_KEY
+
+        try {
+            const headers: HeadersInit = {
+                'Content-Type': 'application/json',
+            }
+
+            if (apiKey) {
+                headers['X-API-KEY'] = apiKey
+            }
+
+            const res = await fetch(`${apiUrl}/bets?`, {
+                cache: 'no-store',
+                headers
+            })
+
+            if (!res.ok) return []
+            return res.json()
+        } catch (e) {
+            console.warn("API fetch failed, returning empty list")
+            return []
         }
-        
-        if (apiKey) {
-          headers['X-API-KEY'] = apiKey
-        }
-        
-        const res = await fetch(`${apiUrl}/bets?limit=50`, {
-          cache: 'no-store',
-          headers
-        })
-        
-        if (!res.ok) return []
-        return res.json()
-    } catch (e) {
-        console.warn("API fetch failed, returning empty list")
+    } catch (error) {
+        console.error("API Error:", error)
         return []
     }
-  } catch (error) {
-    console.error("API Error:", error)
-    return []
-  }
 }
 
 export default async function Dashboard() {
-  const { userId } = await auth()
-  
-  // Redirect to sign-in if not authenticated
-  if (!userId) {
-    redirect('/sign-in')
-  }
+    const { userId } = await auth()
 
-  // Check if user has active subscription
-  const hasSubscription = await hasActiveSubscription(userId)
-  
-  if (!hasSubscription) {
-    redirect('/pricing?subscription_required=true')
-  }
+    // Redirect to sign-in if not authenticated
+    if (!userId) {
+        redirect('/sign-in')
+    }
 
-  const bets: Bet[] = await getBets()
+    // Check if user has active subscription
+    const hasSubscription = await hasActiveSubscription(userId)
 
-  return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-white/20">
-      <DashboardNavbar />
-      
-      <main className="relative z-10 pt-24 pb-20 px-4 md:px-8">
-        <DashboardContent initialBets={bets} />
-      </main>
-    </div>
-  )
+    if (!hasSubscription) {
+        redirect('/pricing?subscription_required=true')
+    }
+
+    const bets: Bet[] = await getBets()
+
+    return (
+        <div className="min-h-screen bg-black text-white font-sans selection:bg-white/20">
+            <DashboardNavbar />
+
+            <main className="relative z-10 pt-24 pb-20 px-4 md:px-8">
+                <DashboardContent initialBets={bets} />
+            </main>
+        </div>
+    )
 }
