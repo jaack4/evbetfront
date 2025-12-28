@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Bet } from './BetRow';
 import { BetRow } from './BetRow';
-import { Search, RefreshCw } from 'lucide-react';
+import { Search, RefreshCw, Clock } from 'lucide-react';
 import { clsx } from 'clsx';
 import Image from 'next/image';
 
@@ -18,8 +18,19 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
     const [selectedBook, setSelectedBook] = useState<string | null>(null);
     const [selectedSport, setSelectedSport] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [showLiveBets, setShowLiveBets] = useState(false);
 
     const filteredBets = initialBets.filter(bet => {
+        // Filter by time - hide past/live bets unless showLiveBets is true
+        if (!showLiveBets) {
+            const dateString = bet.commence_time.endsWith('Z') ? bet.commence_time : `${bet.commence_time}Z`;
+            const commenceTime = new Date(dateString);
+            const now = new Date();
+            if (commenceTime <= now) {
+                return false;
+            }
+        }
+
         // Filter by bookmaker
         if (selectedBook) {
             const normalizedBook = bet.bookmaker.toLowerCase().replace(/\s+/g, '');
@@ -179,6 +190,22 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
                                 NFL
                             </button>
                         </div>
+
+                        <div className="hidden sm:block w-px h-6 bg-white/10 mx-2" />
+
+                        {/* Live Bets Toggle */}
+                        <button
+                            onClick={() => setShowLiveBets(!showLiveBets)}
+                            className={clsx(
+                                "px-3 py-2 rounded-full text-xs sm:text-sm font-medium transition-all flex items-center gap-2 border",
+                                showLiveBets
+                                    ? "bg-zinc-800 border-orange-500/50 text-white shadow-[0_0_10px_-4px_rgba(249,115,22,0.5)]"
+                                    : "bg-zinc-900/50 border-white/5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 hover:border-white/10"
+                            )}
+                        >
+                            <Clock className="w-4 h-4" />
+                            Live Bets
+                        </button>
                     </div>
                 </div>
 
