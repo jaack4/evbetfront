@@ -6,6 +6,8 @@
 CREATE TABLE IF NOT EXISTS subscriptions (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   clerk_user_id TEXT UNIQUE NOT NULL,
+  user_name TEXT,
+  user_email TEXT,
   stripe_customer_id TEXT UNIQUE,
   stripe_subscription_id TEXT UNIQUE,
   stripe_price_id TEXT,

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { upsertSubscription, updateSubscriptionByStripeId } from '@/lib/subscription'
+import { clerkClient } from '@clerk/nextjs/server'
 import Stripe from 'stripe'
 
 export async function POST(req: NextRequest) {
@@ -47,6 +48,22 @@ export async function POST(req: NextRequest) {
         console.log('Attempting to upsert subscription for user:', clerkUserId)
 
         try {
+          // Fetch user details from Clerk
+          let userName: string | null = null
+          let userEmail: string | null = null
+          
+          try {
+            const client = await clerkClient()
+            const user = await client.users.getUser(clerkUserId)
+            userName = user.firstName && user.lastName 
+              ? `${user.firstName} ${user.lastName}` 
+              : user.firstName || user.lastName || null
+            userEmail = user.primaryEmailAddress?.emailAddress || null
+          } catch (clerkError) {
+            console.error('Error fetching user from Clerk:', clerkError)
+            // Continue with subscription creation even if user fetch fails
+          }
+
           // Type assertion to access subscription properties
           const sub = subscriptionData as any
           
@@ -61,6 +78,8 @@ export async function POST(req: NextRequest) {
 
           await upsertSubscription({
             clerk_user_id: clerkUserId,
+            user_name: userName,
+            user_email: userEmail,
             stripe_customer_id: session.customer as string,
             stripe_subscription_id: sub.id,
             stripe_price_id: sub.items.data[0].price.id,
@@ -69,7 +88,7 @@ export async function POST(req: NextRequest) {
             current_period_end: currentPeriodEnd,
             cancel_at_period_end: sub.cancel_at_period_end || false,
           })
-          console.log(`Subscription created for user ${clerkUserId}`)
+          console.log(`Subscription created for user ${clerkUserId} (${userName}, ${userEmail})`)
         } catch (dbError) {
           console.error('Database error upserting subscription:', dbError)
           throw dbError

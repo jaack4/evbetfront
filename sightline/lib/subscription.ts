@@ -3,6 +3,8 @@ import { query } from './database'
 export interface Subscription {
   id: string
   clerk_user_id: string
+  user_name: string | null
+  user_email: string | null
   stripe_customer_id: string | null
   stripe_subscription_id: string | null
   stripe_price_id: string | null
@@ -39,6 +41,8 @@ export async function getSubscription(clerkUserId: string): Promise<Subscription
 export async function upsertSubscription(data: Partial<Subscription> & { clerk_user_id: string }) {
   const {
     clerk_user_id,
+    user_name,
+    user_email,
     stripe_customer_id,
     stripe_subscription_id,
     stripe_price_id,
@@ -50,12 +54,14 @@ export async function upsertSubscription(data: Partial<Subscription> & { clerk_u
 
   await query(
     `INSERT INTO subscriptions (
-      clerk_user_id, stripe_customer_id, stripe_subscription_id, 
-      stripe_price_id, status, current_period_start, 
-      current_period_end, cancel_at_period_end
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      clerk_user_id, user_name, user_email, stripe_customer_id, 
+      stripe_subscription_id, stripe_price_id, status, 
+      current_period_start, current_period_end, cancel_at_period_end
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     ON CONFLICT (clerk_user_id) 
     DO UPDATE SET
+      user_name = EXCLUDED.user_name,
+      user_email = EXCLUDED.user_email,
       stripe_customer_id = EXCLUDED.stripe_customer_id,
       stripe_subscription_id = EXCLUDED.stripe_subscription_id,
       stripe_price_id = EXCLUDED.stripe_price_id,
@@ -66,6 +72,8 @@ export async function upsertSubscription(data: Partial<Subscription> & { clerk_u
       updated_at = NOW()`,
     [
       clerk_user_id,
+      user_name,
+      user_email,
       stripe_customer_id,
       stripe_subscription_id,
       stripe_price_id,
