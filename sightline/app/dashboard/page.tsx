@@ -61,7 +61,9 @@ export default async function Dashboard() {
             <DashboardNavbar />
 
             <main className="relative z-10 pt-24 pb-20 px-4 md:px-8">
-                <DashboardContent initialBets={bets} />
+                <div className="max-w-[1600px] mx-auto">
+                    <DashboardContent initialBets={bets} />
+                </div>
             </main>
         </div>
     )
