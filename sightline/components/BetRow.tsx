@@ -20,6 +20,7 @@ export interface Bet {
     implied_means?: Record<string, number>;
     sharp_mean?: number;
     sample_size?: number;
+    mean_diff?: number;
 }
 
 const getBookmakerLogo = (bookmaker: string) => {
@@ -112,6 +113,16 @@ export const BetRow = ({ bet }: { bet: Bet }) => {
                             <span className="text-indigo-400">Sharp: </span>
                             <span className="text-white font-mono font-semibold">
                                 {bet.sharp_mean !== undefined ? bet.sharp_mean.toFixed(2) : '-'}
+                            </span>
+                        </div>
+                        <div>
+                            <span className="text-indigo-400">Diff: </span>
+                            <span className={clsx(
+                                "font-mono font-semibold",
+                                bet.mean_diff !== undefined && bet.mean_diff > 0 ? "text-emerald-400" : 
+                                bet.mean_diff !== undefined && bet.mean_diff < 0 ? "text-red-400" : "text-zinc-200"
+                            )}>
+                                {bet.mean_diff !== undefined ? (bet.mean_diff > 0 ? '+' : '') + bet.mean_diff.toFixed(2) : '-'}
                             </span>
                         </div>
                         <div>
@@ -244,6 +255,16 @@ export const BetRow = ({ bet }: { bet: Bet }) => {
                         </span>
                     </div>
                     <div className="flex flex-col gap-1 border-l border-white/10 pl-4 flex-1">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs text-indigo-300 whitespace-nowrap">Mean Diff</span>
+                            <span className={clsx(
+                                "font-mono text-sm font-semibold",
+                                bet.mean_diff !== undefined && bet.mean_diff > 0 ? "text-emerald-400" : 
+                                bet.mean_diff !== undefined && bet.mean_diff < 0 ? "text-red-400" : "text-zinc-200"
+                            )}>
+                                {bet.mean_diff !== undefined ? (bet.mean_diff > 0 ? '+' : '') + bet.mean_diff.toFixed(2) : '-'}
+                            </span>
+                        </div>
                         <div className="flex items-center justify-between gap-2">
                             <span className="text-xs text-indigo-300 whitespace-nowrap">Std Dev</span>
                             <span className="text-zinc-200 font-mono text-sm">

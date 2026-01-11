@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Bet } from './BetRow';
 import { BetRow } from './BetRow';
-import { Search, RefreshCw, Clock, Pause, Play } from 'lucide-react';
+import { Search, RefreshCw, Clock, Pause, Play, TrendingUp, Calendar } from 'lucide-react';
 import { clsx } from 'clsx';
 import Image from 'next/image';
 
@@ -23,6 +23,8 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
     const [autoRefresh, setAutoRefresh] = useState(true);
     const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
     const [countdown, setCountdown] = useState(AUTO_REFRESH_INTERVAL / 1000);
+    const [minMeanDiff, setMinMeanDiff] = useState<number>(0);
+    const [timeFilter, setTimeFilter] = useState<string>('all'); // 'all', '1h', '24h', '48h'
 
     const fetchBets = useCallback(async () => {
         setIsRefreshing(true);
@@ -65,12 +67,29 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
 
     const filteredBets = bets.filter(bet => {
         // Filter by time - hide past/live bets unless showLiveBets is true
+        const dateString = bet.commence_time.endsWith('Z') ? bet.commence_time : `${bet.commence_time}Z`;
+        const commenceTime = new Date(dateString);
+        const now = new Date();
+
         if (!showLiveBets) {
-            const dateString = bet.commence_time.endsWith('Z') ? bet.commence_time : `${bet.commence_time}Z`;
-            const commenceTime = new Date(dateString);
-            const now = new Date();
             if (commenceTime <= now) {
                 return false;
+            }
+        }
+
+        // Filter by time range
+        if (timeFilter !== 'all') {
+            const hoursMap: Record<string, number> = {
+                '1h': 1,
+                '24h': 24,
+                '48h': 48
+            };
+            const hours = hoursMap[timeFilter];
+            if (hours) {
+                const maxTime = new Date(now.getTime() + hours * 60 * 60 * 1000);
+                if (commenceTime > maxTime) {
+                    return false;
+                }
             }
         }
 
@@ -89,6 +108,13 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
             const normalizedSelected = selectedSport.toLowerCase();
             // Check for partial matches like "NBA" in "NBA Preseason"
             if (!normalizedSport.includes(normalizedSelected)) {
+                return false;
+            }
+        }
+
+        // Filter by mean diff
+        if (minMeanDiff > 0 && bet.mean_diff !== undefined) {
+            if (bet.mean_diff < minMeanDiff) {
                 return false;
             }
         }
@@ -153,14 +179,14 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
                                 placeholder="Search"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-zinc-900/50 border border-zinc-800 rounded-lg pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-zinc-600 transition-colors placeholder:text-zinc-600"
+                                className="w-full bg-zinc-900/50 border border-zinc-800 rounded-lg pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-zinc-600 transition-colors placeholder:text-zinc-600 font-sans"
                             />
                         </div>
                     </div>
 
                     {/* Bookmakers */}
                     <div>
-                        <h3 className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">Books</h3>
+                        <h3 className="text-xs font-sans text-white-500 uppercase tracking-wider mb-3">Books</h3>
                         <div className="space-y-1">
                             {[
                                 { id: 'underdog', name: 'Underdog', logo: '/logos/underdog.png' },
@@ -172,10 +198,10 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
                                     key={book.id}
                                     onClick={() => toggleBook(book.id)}
                                     className={clsx(
-                                        "w-full px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2.5",
+                                        "w-full px-3 py-2 rounded-lg text-sm font-sans transition-all flex items-center gap-2.5",
                                         selectedBook === book.id
-                                            ? "bg-white text-black"
-                                            : "text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+                                            ? "bg-white text-black font-medium"
+                                            : "text-zinc-400 hover:text-white hover:bg-zinc-800/50 font-normal"
                                     )}
                                 >
                                     <div className="w-4 h-4 relative flex-shrink-0">
@@ -189,7 +215,7 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
 
                     {/* Leagues */}
                     <div>
-                        <h3 className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">Leagues</h3>
+                        <h3 className="text-xs font-sans text-white-500 uppercase tracking-wider mb-3">Leagues</h3>
                         <div className="space-y-1">
                             {[
                                 { id: 'nba', name: 'NBA', logo: '/logos/nba.png' },
@@ -199,10 +225,10 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
                                     key={sport.id}
                                     onClick={() => toggleSport(sport.id)}
                                     className={clsx(
-                                        "w-full px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2.5",
+                                        "w-full px-3 py-2 rounded-lg text-sm font-sans transition-all flex items-center gap-2.5",
                                         selectedSport === sport.id
-                                            ? "bg-white text-black"
-                                            : "text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+                                            ? "bg-white text-black font-medium"
+                                            : "text-zinc-400 hover:text-white hover:bg-zinc-800/50 font-normal"
                                     )}
                                 >
                                     <div className="w-4 h-4 relative flex-shrink-0">
@@ -214,60 +240,78 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
                         </div>
                     </div>
 
+                    {/* Time Filter */}
+                    <div>
+                        <h3 className="text-xs font-sans text-white-500 uppercase tracking-wider mb-3">Time Range</h3>
+                        <div className="space-y-1">
+                            {[
+                                { id: 'all', name: 'All Games', icon: Calendar },
+                                { id: '1h', name: 'Next 1h', icon: Clock },
+                                { id: '24h', name: 'Next 24h', icon: Clock },
+                                { id: '48h', name: 'Next 48h', icon: Clock },
+                            ].map((option) => (
+                                <button
+                                    key={option.id}
+                                    onClick={() => setTimeFilter(option.id)}
+                                    className={clsx(
+                                        "w-full px-3 py-2 rounded-lg text-sm font-sans transition-all flex items-center gap-2.5",
+                                        timeFilter === option.id
+                                            ? "bg-white text-black font-medium"
+                                            : "text-zinc-400 hover:text-white hover:bg-zinc-800/50 font-normal"
+                                    )}
+                                >
+                                    <option.icon className={clsx("w-4 h-4", timeFilter === option.id && "text-black")} />
+                                    {option.name}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Mean Diff Filter */}
+                    <div>
+                        <h3 className="text-xs font-sans text-white-500 uppercase tracking-wider mb-3">
+                            <div className="flex items-center justify-between">
+                                <span>Min Mean Diff</span>
+                                <span className="text-white font-mono">{minMeanDiff.toFixed(1)}</span>
+                            </div>
+                        </h3>
+                        <div className="px-1">
+                            <input
+                                type="range"
+                                min="0"
+                                max="10"
+                                step="0.5"
+                                value={minMeanDiff}
+                                onChange={(e) => setMinMeanDiff(parseFloat(e.target.value))}
+                                className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer slider"
+                                style={{
+                                    background: `linear-gradient(to right, #10b981 0%, #10b981 ${(minMeanDiff / 10) * 100}%, #27272a ${(minMeanDiff / 10) * 100}%, #27272a 100%)`
+                                }}
+                            />
+                            <div className="flex justify-between text-xs text-zinc-600 mt-1 font-sans">
+                                <span>0</span>
+                                <span>10</span>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Options */}
                     <div>
-                        <h3 className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">Options</h3>
+                        <h3 className="text-xs font-sans text-white-500 uppercase tracking-wider mb-3">Options</h3>
                         <div className="space-y-1">
                             <button
                                 onClick={() => setShowLiveBets(!showLiveBets)}
                                 className={clsx(
-                                    "w-full px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2.5",
+                                    "w-full px-3 py-2 rounded-lg text-sm font-sans transition-all flex items-center gap-2.5",
                                     showLiveBets
-                                        ? "bg-white text-black"
-                                        : "text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+                                        ? "bg-white text-black font-medium"
+                                        : "text-zinc-400 hover:text-white hover:bg-zinc-800/50 font-normal"
                                 )}
                             >
                                 <Clock className={clsx("w-4 h-4", showLiveBets && "text-black")} />
                                 Include Live
                             </button>
                         </div>
-                    </div>
-
-                    {/* Refresh Controls */}
-                    <div className="pt-4 border-t border-zinc-800/50">
-                        <div className="flex items-center gap-2 mb-3">
-                            <button
-                                onClick={handleRefresh}
-                                disabled={isRefreshing}
-                                className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50 transition-all disabled:opacity-50"
-                            >
-                                <RefreshCw className={clsx("w-4 h-4", isRefreshing && "animate-spin")} />
-                            </button>
-                            <button
-                                onClick={toggleAutoRefresh}
-                                className={clsx(
-                                    "flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2",
-                                    autoRefresh
-                                        ? "bg-zinc-800/50 text-zinc-300"
-                                        : "text-zinc-500 hover:text-white hover:bg-zinc-800/50"
-                                )}
-                            >
-                                {autoRefresh ? (
-                                    <>
-                                        <Pause className="w-3.5 h-3.5" />
-                                        <span className="tabular-nums">{countdown}s</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Play className="w-3.5 h-3.5" />
-                                        <span>Auto</span>
-                                    </>
-                                )}
-                            </button>
-                        </div>
-                        <p className="text-xs text-zinc-600">
-                            Updated {formatLastUpdated()}
-                        </p>
                     </div>
                 </div>
             </aside>
@@ -322,18 +366,94 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
                             {sport.name}
                         </button>
                     ))}
+                    <div className="w-px h-6 bg-zinc-800 flex-shrink-0" />
+                    {[
+                        { id: 'all', name: 'All' },
+                        { id: '1h', name: '1h' },
+                        { id: '24h', name: '24h' },
+                        { id: '48h', name: '48h' },
+                    ].map((time) => (
+                        <button
+                            key={time.id}
+                            onClick={() => setTimeFilter(time.id)}
+                            className={clsx(
+                                "flex-shrink-0 px-3 py-2 rounded-lg text-sm font-medium transition-all",
+                                timeFilter === time.id
+                                    ? "bg-white text-black"
+                                    : "bg-zinc-900 text-zinc-400"
+                            )}
+                        >
+                            {time.name}
+                        </button>
+                    ))}
+                    <div className="w-px h-6 bg-zinc-800 flex-shrink-0" />
+                    <div className="flex-shrink-0 flex items-center gap-2 bg-zinc-900 px-3 py-2 rounded-lg">
+                        <TrendingUp className="w-4 h-4 text-emerald-400" />
+                        <span className="text-xs text-zinc-400">Diff:</span>
+                        <span className="text-xs text-white font-mono font-semibold min-w-[2ch]">{minMeanDiff.toFixed(1)}</span>
+                        <input
+                            type="range"
+                            min="0"
+                            max="10"
+                            step="0.5"
+                            value={minMeanDiff}
+                            onChange={(e) => setMinMeanDiff(parseFloat(e.target.value))}
+                            className="w-20 h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer slider"
+                            style={{
+                                background: `linear-gradient(to right, #10b981 0%, #10b981 ${(minMeanDiff / 10) * 100}%, #27272a ${(minMeanDiff / 10) * 100}%, #27272a 100%)`
+                            }}
+                        />
+                    </div>
                 </div>
             </div>
 
             {/* Main Content */}
             <div className="flex-1 min-w-0">
                 {/* Header */}
-                <div className="mb-6 flex items-baseline justify-between">
+                <div className="mb-6 flex items-start justify-between">
                     <div>
                         <h1 className="text-2xl font-semibold text-white mb-1">Bets</h1>
                         <p className="text-sm text-zinc-500">
                             {filteredBets.length} active opportunities
                         </p>
+                    </div>
+                    
+                    {/* Refresh Controls */}
+                    <div className="flex flex-col items-end gap-2">
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={handleRefresh}
+                                disabled={isRefreshing}
+                                className="p-2 rounded-lg bg-zinc-900/50 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all disabled:opacity-50"
+                            >
+                                <RefreshCw className={clsx("w-4 h-4", isRefreshing && "animate-spin")} />
+                            </button>
+                            <button
+                                onClick={toggleAutoRefresh}
+                                className={clsx(
+                                    "px-3 py-2 rounded-lg text-sm font-sans transition-all flex items-center gap-2 border",
+                                    autoRefresh
+                                        ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                                        : "bg-zinc-900/50 border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800"
+                                )}
+                            >
+                                {autoRefresh ? (
+                                    <>
+                                        <Pause className="w-3.5 h-3.5" />
+                                        <span className="hidden sm:inline">Auto</span>
+                                        <span className="tabular-nums text-emerald-300">{countdown}s</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Play className="w-3.5 h-3.5" />
+                                        <span>Auto Off</span>
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                        <span className="text-xs text-zinc-500">
+                            Updated {formatLastUpdated()}
+                        </span>
                     </div>
                 </div>
 
