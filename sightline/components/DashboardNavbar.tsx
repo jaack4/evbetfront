@@ -25,7 +25,7 @@ export const DashboardNavbar = () => {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-zinc-800/50">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl">
       <div className="max-w-[1400px] mx-auto px-2 lg:px-4 h-16 flex items-center justify-between">
         {/* Left Side - Logo and Main Navigation */}
         <div className="flex items-center gap-12">
