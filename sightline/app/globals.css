@@ -3,18 +3,66 @@
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --font-family-sans: var(--font-sans), system-ui, sans-serif;
+  --font-family-mono: var(--font-mono), ui-monospace, monospace;
 }
 
 :root {
   --background: #000000;
-  --foreground: #ffffff;
+  --foreground: #fafafa;
+  --muted: #71717a;
+  --border: rgba(255, 255, 255, 0.1);
+  --card: rgba(24, 24, 27, 0.5);
+  --accent: #10b981;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
+  font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Selection styling */
+::selection {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Focus styling */
+:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+/* 3D perspective utilities */
 .perspective-1000 {
   perspective: 1000px;
 }
@@ -23,6 +71,7 @@ body {
   transform-style: preserve-3d;
 }
 
+/* Animations */
 @keyframes snowfall {
   0% {
     transform: translateY(-10px);
@@ -49,6 +98,34 @@ body {
 
 .animate-border-spin {
   animation: border-spin 4s linear infinite;
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 /* Range slider styles */
@@ -87,4 +164,34 @@ input[type="range"].slider:focus::-webkit-slider-thumb {
 
 input[type="range"].slider:focus::-moz-range-thumb {
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+/* Gradient text utility */
+.text-gradient {
+  background: linear-gradient(to bottom, #ffffff, #a1a1aa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(24, 24, 27, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Subtle grid background */
+.bg-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Dot pattern background */
+.bg-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
