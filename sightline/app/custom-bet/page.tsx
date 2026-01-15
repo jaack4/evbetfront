@@ -42,7 +42,7 @@ export default async function CustomBet() {
                         <h2 className="text-xl font-semibold text-white mb-2">Coming Soon</h2>
                         <p className="text-zinc-400 max-w-md">
                             Custom bet analysis tools are currently in development. 
-                            Check back soon for new features!
+                            Check back soon for more updates.
                         </p>
                     </div>
                 </div>

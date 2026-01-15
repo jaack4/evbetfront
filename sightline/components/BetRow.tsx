@@ -20,6 +20,7 @@ export interface Bet {
     implied_means?: Record<string, number>;
     sharp_mean?: number;
     sample_size?: number;
+    mean_diff?: number;
 }
 
 const getBookmakerLogo = (bookmaker: string) => {
@@ -109,19 +110,29 @@ export const BetRow = ({ bet }: { bet: Bet }) => {
                 <div className="flex items-center justify-between text-xs mb-2">
                     <div className="flex items-center gap-3">
                         <div>
-                            <span className="text-indigo-400">Sharp: </span>
+                            <span className="text-zinc-500">Sharp: </span>
                             <span className="text-white font-mono font-semibold">
                                 {bet.sharp_mean !== undefined ? bet.sharp_mean.toFixed(2) : '-'}
                             </span>
                         </div>
                         <div>
-                            <span className="text-indigo-400">SD: </span>
+                            <span className="text-zinc-500">Diff: </span>
+                            <span className={clsx(
+                                "font-mono font-semibold",
+                                bet.mean_diff !== undefined && bet.mean_diff > 0 ? "text-emerald-400" : 
+                                bet.mean_diff !== undefined && bet.mean_diff < 0 ? "text-red-400" : "text-zinc-200"
+                            )}>
+                                {bet.mean_diff !== undefined ? (bet.mean_diff > 0 ? '+' : '') + bet.mean_diff.toFixed(2) : '-'}
+                            </span>
+                        </div>
+                        <div>
+                            <span className="text-zinc-500">SD: </span>
                             <span className="text-zinc-200 font-mono">
                                 {bet.std_dev !== undefined ? bet.std_dev.toFixed(2) : '-'}
                             </span>
                         </div>
                         <div>
-                            <span className="text-indigo-400">n: </span>
+                            <span className="text-zinc-500">n: </span>
                             <span className="text-zinc-200 font-mono">
                                 {bet.sample_size !== undefined ? bet.sample_size : '-'}
                             </span>
@@ -132,7 +143,7 @@ export const BetRow = ({ bet }: { bet: Bet }) => {
                 {/* Implied Means - Only show if present, more compact */}
                 {bet.implied_means && Object.keys(bet.implied_means).length > 0 && (
                     <div className="flex items-center gap-2 flex-wrap text-xs pt-1.5 border-t border-white/5">
-                        <span className="text-indigo-400 font-semibold">Implied:</span>
+                        <span className="text-zinc-500 font-semibold">Implied:</span>
                         {Object.entries(bet.implied_means).map(([book, mean]) => (
                             <div key={book} className="flex items-center gap-1.5 bg-zinc-800/30 px-2 py-0.5 rounded">
                                 {getBookmakerLogo(book) ? (
@@ -238,20 +249,30 @@ export const BetRow = ({ bet }: { bet: Bet }) => {
                 {/* 6. Model Data */}
                 <div className="flex items-center gap-3">
                     <div className="flex flex-col items-center justify-center min-w-[80px]">
-                        <span className="text-xs text-indigo-300 whitespace-nowrap mb-0.5">Sharp Mean</span>
+                        <span className="text-xs text-zinc-500 whitespace-nowrap mb-0.5">Sharp Mean</span>
                         <span className="text-white font-mono text-xl font-bold">
                             {bet.sharp_mean !== undefined ? bet.sharp_mean.toFixed(2) : '-'}
                         </span>
                     </div>
                     <div className="flex flex-col gap-1 border-l border-white/10 pl-4 flex-1">
                         <div className="flex items-center justify-between gap-2">
-                            <span className="text-xs text-indigo-300 whitespace-nowrap">Std Dev</span>
+                            <span className="text-xs text-zinc-500 whitespace-nowrap">Mean Diff</span>
+                            <span className={clsx(
+                                "font-mono text-sm font-semibold",
+                                bet.mean_diff !== undefined && bet.mean_diff > 0 ? "text-emerald-400" : 
+                                bet.mean_diff !== undefined && bet.mean_diff < 0 ? "text-red-400" : "text-zinc-200"
+                            )}>
+                                {bet.mean_diff !== undefined ? (bet.mean_diff > 0 ? '+' : '') + bet.mean_diff.toFixed(2) : '-'}
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs text-zinc-500 whitespace-nowrap">Std Dev</span>
                             <span className="text-zinc-200 font-mono text-sm">
                                 {bet.std_dev !== undefined ? bet.std_dev.toFixed(2) : '-'}
                             </span>
                         </div>
                         <div className="flex items-center justify-between gap-2">
-                            <span className="text-xs text-indigo-300 whitespace-nowrap">Games Used</span>
+                            <span className="text-xs text-zinc-500 whitespace-nowrap">Games Used</span>
                             <span className="text-zinc-200 font-mono text-sm">
                                 {bet.sample_size !== undefined ? bet.sample_size : '-'}
                             </span>

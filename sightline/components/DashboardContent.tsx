@@ -458,9 +458,9 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
                 </div>
 
                 {/* Table */}
-                <div className="bg-zinc-900/30 border border-white/5 rounded-xl overflow-hidden">
+                <div className="bg-black/40 border border-white/[0.08] rounded-2xl overflow-hidden backdrop-blur-sm">
                     {/* Table Header */}
-                    <div className="hidden md:grid grid-cols-[0.7fr_3fr_2fr_1.75fr_1.75fr_2.8fr] gap-4 px-4 py-3 bg-zinc-900/50 border-b border-white/5 text-xs font-semibold text-zinc-200">
+                    <div className="hidden md:grid grid-cols-[0.7fr_3fr_2fr_1.75fr_1.75fr_2.8fr] gap-5 px-5 py-3 bg-white/[0.02] border-b border-white/[0.06] text-xs font-medium text-zinc-500 uppercase tracking-wider">
                         <div className="text-center">EV</div>
                         <div>Event</div>
                         <div>Market</div>
@@ -472,16 +472,16 @@ export const DashboardContent = ({ initialBets }: DashboardContentProps) => {
                     {/* Rows */}
                     {filteredBets.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-32 text-center">
-                            <div className="w-12 h-12 bg-zinc-800/50 rounded-full flex items-center justify-center mb-4">
+                            <div className="w-12 h-12 bg-white/[0.03] rounded-full flex items-center justify-center mb-4 border border-white/[0.08]">
                                 <Search className="w-5 h-5 text-zinc-600" />
                             </div>
-                            <h3 className="text-lg font-medium mb-1 text-zinc-300">No bets found</h3>
+                            <h3 className="text-base font-medium mb-1 text-zinc-300">No bets found</h3>
                             <p className="text-zinc-600 text-sm">
                                 Try adjusting your filters
                             </p>
                         </div>
                     ) : (
-                        <div className="divide-y divide-zinc-800/30">
+                        <div>
                             {filteredBets.map((bet) => (
                                 <BetRow key={bet.id} bet={bet} />
                             ))}
