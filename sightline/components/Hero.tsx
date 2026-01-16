@@ -106,30 +106,37 @@ export const Hero = async () => {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
             </span>
-            v2.0 Algorithm Now Live
+              Now Live
           </span>
         </div>
 
         {/* Main Headline */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-center tracking-tight max-w-4xl mx-auto leading-[1.1] mb-6">
-          <span className="text-gradient">Beat the sportsbooks</span>
+          <span className="text-white">The simplest way</span>
           <br />
-          <span className="text-white">with math.</span>
+          <span className="text-white">to beat the line.</span>
         </h1>
         
         {/* Subtitle */}
         <p className="text-base md:text-lg text-zinc-400 text-center max-w-xl mx-auto mb-10 leading-relaxed">
-          Real-time odds scanning, +EV opportunity detection, and instant arbitrage alerts. Stop gambling and start investing.
+          Our EV-based odds scanner identifies positive value opportunites across the most popular pick'em markets. 
         </p>
 
-        {/* CTA Button */}
+        {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center gap-3 mb-16">
           <a 
             href={user ? "/dashboard" : "/sign-up"} 
             className="group relative px-6 py-3 bg-white text-black hover:bg-zinc-100 transition-all rounded-xl text-sm font-semibold flex items-center gap-2 shadow-[0_0_30px_-5px_rgba(255,255,255,0.2)] hover:shadow-[0_0_40px_-5px_rgba(255,255,255,0.3)] hover:-translate-y-0.5"
           >
-            {user ? "Go to Dashboard" : "Start free trial"}
+            {user ? "Go to Dashboard" : "Get Started"}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+          </a>
+          <a 
+            href="/history" 
+            className="group relative px-6 py-3 bg-transparent border border-white/20 text-white hover:border-white/40 hover:bg-white/5 transition-all rounded-xl text-sm font-semibold flex items-center gap-2 hover:-translate-y-0.5"
+          >
+            View Our Results
+            <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </a>
         </div>
 
