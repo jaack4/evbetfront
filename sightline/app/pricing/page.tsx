@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@clerk/nextjs'
 import { Check, ArrowLeft, Loader2 } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 // TODO: Replace these with your actual Stripe Price IDs from your Stripe dashboard
 const PRICE_ID_MONTHLY = 'price_1SesX0A6erfgyCsCQ2zjjpXf'
@@ -67,11 +68,14 @@ function PricingContent() {
       {/* Header */}
       <div className="border-b border-white/5 bg-black/50 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center">
-          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 bg-gradient-to-br from-white to-zinc-400 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-              <div className="w-3 h-3 bg-black rounded-full" />
-            </div>
-            <span className="font-bold text-lg tracking-tight text-white">Sightline</span>
+          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <Image 
+              src="/clearline.svg" 
+              alt="Clearline" 
+              width={120} 
+              height={40} 
+              className="h-8 w-auto"
+            />
           </Link>
         </div>
       </div>

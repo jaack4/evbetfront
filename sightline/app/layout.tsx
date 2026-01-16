@@ -14,7 +14,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sightline - EV Sports Betting",
+  title: "Clearline - EV Sports Betting",
   description: "Find the best EV sports bets in real-time.",
 };
 

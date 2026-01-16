@@ -5,6 +5,7 @@ import { Snowfall } from './Snowfall';
 import { FeatureSpotlight } from './FeatureSpotlight';
 import { AccountDropdown } from './AccountDropdown';
 import { auth, currentUser } from '@clerk/nextjs/server';
+import Image from 'next/image';
 
 async function getTopBet(): Promise<Bet | null> {
   try {
@@ -53,11 +54,14 @@ export const Hero = async () => {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
-            <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center">
-              <div className="w-2.5 h-2.5 bg-black rounded-full" />
-            </div>
-            <span className="font-semibold text-[15px] tracking-tight text-white">Sightline</span>
+          <a href="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <Image 
+              src="/clearline.svg" 
+              alt="Clearline" 
+              width={120} 
+              height={40} 
+              className="h-10 w-auto"
+            />
           </a>
 
           {/* Desktop Nav */}

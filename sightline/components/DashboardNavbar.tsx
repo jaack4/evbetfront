@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { UserButton } from '@clerk/nextjs';
 import { Menu, X } from 'lucide-react';
+import Image from 'next/image';
 
 export const DashboardNavbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -30,11 +31,14 @@ export const DashboardNavbar = () => {
         {/* Left Side - Logo and Main Navigation */}
         <div className="flex items-center gap-10">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
-            <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center">
-              <div className="w-2.5 h-2.5 bg-black rounded-full" />
-            </div>
-            <span className="font-semibold text-[15px] tracking-tight text-white">Sightline</span>
+          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <Image 
+              src="/clearline.svg" 
+              alt="Clearline" 
+              width={120} 
+              height={40} 
+              className="h-10 w-auto"
+            />
           </Link>
 
           {/* Main Nav Links */}

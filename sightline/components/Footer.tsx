@@ -1,5 +1,6 @@
 import React from 'react';
 import { Twitter, Github } from 'lucide-react';
+import Image from 'next/image';
 
 export const Footer = () => {
   return (
@@ -9,11 +10,14 @@ export const Footer = () => {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-12">
           
           {/* Brand */}
-          <div className="flex items-center gap-2.5">
-            <div className="w-6 h-6 bg-white rounded-md flex items-center justify-center">
-              <div className="w-2 h-2 bg-black rounded-full" />
-            </div>
-            <span className="font-semibold text-[15px] tracking-tight text-white">Sightline</span>
+          <div className="flex items-center">
+            <Image 
+              src="/clearline.svg" 
+              alt="Clearline" 
+              width={100} 
+              height={35} 
+              className="h-10 w-auto"
+            />
           </div>
 
           {/* Links */}
@@ -40,7 +44,7 @@ export const Footer = () => {
         {/* Bottom */}
         <div className="pt-8 border-t border-white/[0.04] flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-xs text-zinc-600">
-            &copy; {new Date().getFullYear()} Sightline Analytics. All rights reserved.
+            &copy; {new Date().getFullYear()} Clearline Analytics. All rights reserved.
           </div>
           <div className="text-xs text-zinc-600">
             Smash the odds. Land your edge.
